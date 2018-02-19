@@ -1,3 +1,3 @@
 # GoofyGoobers
 
-An attempted edit.
+Edit removed. Did not follow protocol.
