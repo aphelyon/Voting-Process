@@ -21,4 +21,4 @@ script:
 
 after_script:
  - docker-compose -f ./vote/vote_1register/docker-compose.yml stop
- - docker-compose -f ./vote/vote_1register/docker-compose.yml rm y
+ - docker-compose -f ./vote/vote_1register/docker-compose.yml -f
