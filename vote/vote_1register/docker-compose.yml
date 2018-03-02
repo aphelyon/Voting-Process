@@ -35,7 +35,7 @@ proc:
                             #container at localhost:8001.
       - "8001:8000"
 
-    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/exp --reload-on-changes /app/proc/proc/wsgi.py" #modwsgi setup
+    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/proc --reload-on-changes /app/proc/proc/wsgi.py" #modwsgi setup
 
 
 web:
