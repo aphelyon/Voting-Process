@@ -1,5 +1,5 @@
 ## Read Me!
-0. This repo should only contain source code. No binaries, executables, or other large files.
+0. This repo should only contain source code. No binaries, databases (please don't push the database), or other large files.
 
 1. Tentative Source Control: Clone the repo locally and create your own branch. Push changes to your branch and make pull requests as needed. How pull requests are accepted is to be determined.
 
