@@ -16,8 +16,9 @@ before_script:
  - docker-compose -f ./vote/vote_1register/docker-compose.yml up -d
 
 script:
-  - bash ./vote/test.sh
+  -  docker exec -it vote1register_web_1 bash -c "cd web && bash ./tests.sh"
+  -  docker exec -it vote1register_proc_1 bash -c "cd proc && bash ./tests.sh"
 
 after_script:
  - docker-compose -f ./vote/vote_1register/docker-compose.yml stop
- - docker-compose -f ./vote/vote_1register/docker-compose.yml rm 
+ - docker-compose -f ./vote/vote_1register/docker-compose.yml rm y
