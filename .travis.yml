@@ -13,7 +13,7 @@ before_install:
  - docker pull arun8r/djmodwsgi
  
 before_script:
- - docker-compose -f ./vote/vote_1register/docker-compose.yml up
+ - docker-compose -f ./vote/vote_1register/docker-compose.yml up -d
 
 script:
   - bash ./vote/test.sh
