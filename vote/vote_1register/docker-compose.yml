@@ -1,0 +1,55 @@
+#This is the docker compose file. Each layer (so far 'proc' and 'web') of this part of the application (voter registration)
+#will be hosted in a separate docker container. Each docker container itself will run a Django project.
+
+#In terms of an MVC architecture, the web layer corresponds to the view, and the proc layer corresponds to the controller.
+#The model is notably absent; this is because we do not host voter registration data.
+
+#But then you might ask, "If proc and web are both hosting Django projects, don't these Django projects have their own models,
+#views, and controllers?" The answer is yes, but we don't use all of them. In the proc layer, we do not need to write views, because 
+#it will serve as an internal API that will only be exposed to the web layer. Similarly, we won't worry about models. We only have to 
+#write the controller part of the proc layer.
+
+#For the web layer, which correspond to the view part of our app, we have to write the views. We also have to write the controller 
+#to render the views and communicate with the proc layer.
+
+#To make things more confusing, Django calls its controller layer 'views' and its views layer 'templates'. So in Django terminology, for
+#the web layer, we need to write templates (for display to the client) and views (to render the templates and communicate with the proc 
+#layer). For the proc layer, we only need to write the views (so that it can communicate with both the web layer and the provided voter
+#-registration database).
+
+#Please contact Arun (arun8r@gmail.com) if you have any questions. This can be very confusing at first.
+
+#Last remark: Don't change this file unless you know what you're doing.
+
+proc:
+    image: arun8r/djmodwsgi #This is the image we will use. It contains python 3.5, django 2.0.2, and modwsgi. Though django has its
+                            #own server capabilities, these are recommended for only for development. So we will use modwsgi.
+    
+    volumes:                #This tells the container to initialize its starting path to your working directory. This allows you to edit the 
+                            #Django project source code from a text editor on your own machine, outside of the docker container.
+      - "$PWD:/app"
+    
+    ports:                  #Expose port 8001 on your machine to port 8000 of the docker container. For proc, eventually this will be deleted
+                            #but we need it now for testing purposes. The reason for this is that we don't want clients to access internal api
+                            #calls. When running on your machine, in your browser or POSTMAN, this allows you to access port 8000 of the docker
+                            #container at localhost:8001.
+      - "8001:8000"
+
+    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/exp --reload-on-changes /app/proc/proc/wsgi.py" #modwsgi setup
+
+
+web:
+    image: arun8r/djangomodwsgi #Same image as above.
+    
+    links:                      #This web container is linked to the proc container.
+      -  proc:proc-api
+    
+    volumes:
+      - "$PWD:/app"
+
+    ports:
+      - "8000:8000"        #Expose port 8000 on your machine to port 8000 of the docker container. Eventually, clients will connect to port 8000
+                           #of the server and they will be displayed whatever is coming out of port 8000 on your computer. in your browser or POSTMAN, 
+                           #this allows you to access port 8000 of the docker container at localhost:8001.
+
+    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py" 
