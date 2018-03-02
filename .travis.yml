@@ -3,13 +3,17 @@ sudo: required
 dist: trusty
 
 language: python
+python:
+  - "3.5"
 
 services:
   - docker
+
+before_install:
+ - docker pull arun8r/djmodwsgi
  
 before_script:
- - docker-compose up -d
-
+ - docker-compose up -f ./vote/vote_1register
 
 after_script:
  - docker-compose stop
