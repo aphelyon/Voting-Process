@@ -1,0 +1,17 @@
+sudo: required
+
+dist: trusty
+
+language: python
+
+services:
+  - docker
+ 
+before_script:
+ - cd vote/vote_1register
+ - docker-compose up -d
+
+
+after_script:
+ - docker-compose stop
+ - docker-compose rm y
