@@ -11,9 +11,7 @@ services:
   - docker
  
 before_script:
- - cd vote/vote_1register
- - ls -a
- - docker-compose up -d
+ - cd vote/vote_1register && docker-compose up -d
 
 
 after_script:
