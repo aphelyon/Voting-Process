@@ -5,7 +5,7 @@
 
 2. Please set up docker and docker-compose. Refer to the file setup_docker.md
 
-3. Browse the repo structure. Ask questions
+3. Browse the repo structure. Ask questions.
 
 ## Import Links
 
