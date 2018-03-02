@@ -13,3 +13,6 @@ If you are using Windows, then follow the instructions here (use the stable chan
 **Step 2**:
 Install docker-compose. Docker-compose allows us to easily set up docker containers with the appropriate images. 
 https://docs.docker.com/compose/install/
+
+**Step 3**:
+Install Postman: https://www.getpostman.com/apps. This will be vital for development.
