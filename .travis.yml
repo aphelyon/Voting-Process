@@ -14,11 +14,10 @@ before_install:
  
 before_script:
  - docker-compose -f ./vote/vote_1register/docker-compose.yml up -d
- - sleep 10
 
 script:
-  -  docker exec -it vote1register_web_1 bash -c "cd web && bash ./tests.sh"
-  -  docker exec -it vote1register_proc_1 bash -c "cd proc && bash ./tests.sh"
+  -  docker exec -it vote1register_web_1 bash -c "cd vote/vote_1register/web && bash ./tests.sh"
+  -  docker exec -it vote1register_proc_1 bash -c "cd vote/vote_1register/proc && bash ./tests.sh"
 
 after_script:
  - docker-compose -f ./vote/vote_1register/docker-compose.yml stop
