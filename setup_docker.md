@@ -1,6 +1,3 @@
-
-IN PROGRESS
-
 **Step 1**:
 Install Docker.
 
