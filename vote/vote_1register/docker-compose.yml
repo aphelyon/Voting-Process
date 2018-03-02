@@ -39,7 +39,7 @@ proc:
 
 
 web:
-    image: arun8r/djangomodwsgi #Same image as above.
+    image: arun8r/djmodwsgi #Same image as above.
     
     links:                      #This web container is linked to the proc container.
       -  proc:proc-api
