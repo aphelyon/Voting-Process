@@ -3,9 +3,11 @@
 
 1. Tentative Source Control: Clone the repo locally and create your own branch. Push changes to your branch and make pull requests as needed.
 
-2. Please set up docker and docker-compose. Refer to the file setup_docker.md
+2. Please set up docker, docker-compose, and Postman. Refer to the file setup_docker.md
 
 3. Browse the repo structure to understand the project structure.
+
+4. We will use Travis CI for continuous integration. It will check if the code you commit to your branch passes all tests. This will make pushing to master a lot easier.
 
 ## Import Links
 
