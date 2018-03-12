@@ -1,0 +1,46 @@
+#Please contact Arun (arun8r@gmail.com) if you have any questions. This can be very confusing at first.
+
+#Last remark: Don't change this file unless you know what you're doing.
+
+
+models:
+    image: arun8r/djmodwsgi 
+    
+    volumes:         
+      - "$PWD:/app"
+     
+    
+    ports:             
+      - "8004:8000"
+
+    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/models --reload-on-changes /app/models/models/wsgi.py" #modwsgi setup
+
+
+proc:
+    image: arun8r/djmodwsgi
+
+    links:                    
+      -  models:models-api 
+    
+    volumes:      
+      - "$PWD:/app"
+    
+    ports:              
+      - "8003:8000"
+
+    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/proc --reload-on-changes /app/proc/proc/wsgi.py" #modwsgi setup
+
+
+web:
+    image: arun8r/djmodwsgi 
+    
+    links:                    
+      -  proc:proc-api
+    
+    volumes:
+      - "$PWD:/app"
+
+    ports:
+      - "8002:8000"      
+
+    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/web --reload-on-changes /app/web/web/wsgi.py" 
