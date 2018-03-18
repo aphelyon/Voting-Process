@@ -1,6 +1,4 @@
-from django.shortcuts import render, render_to_response
 from django.http import JsonResponse
-from django.template import loader
 
 
 def index(request):
@@ -15,6 +13,3 @@ def _success_response(request, resp=None):
         return JsonResponse({'ok': True, 'resp': resp})
     else:
         return JsonResponse({'ok': True})
-
-def login(request):
-    return render_to_response('webLayer/login.html')
