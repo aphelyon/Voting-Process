@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('goober/', views.goober, name='goober'),
+    path('registrationcheck/', views.registrationcheck, name='checkin')
 ]
 
