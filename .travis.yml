@@ -11,7 +11,6 @@ before_install:
 before_script:
  - docker-compose -f ./vote/vote_1register/docker-compose.yml up -d
  - docker-compose -f ./vote/vote_2cast/docker-compose.yml up -d 
- - sleep 10
 
 script:
   -  docker exec -it vote1register_web_1 bash -c "cd vote/vote_1register/web && bash ./tests.sh"
