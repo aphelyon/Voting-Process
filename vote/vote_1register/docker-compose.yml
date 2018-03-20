@@ -52,4 +52,4 @@ web:
                            #of the server and they will be displayed whatever is coming out of port 8000 on your computer. in your browser or POSTMAN, 
                            #this allows you to access port 8000 of the docker container at localhost:8001.
 
-    command: bash -c "mod_wsgi-express start-server --port 8000 --working-directory /app/web --url-alias /static /app/web/static --reload-on-changes /app/web/web/wsgi.py" 
+    command: bash -c "python web/manage.py collectstatic --noinput && mod_wsgi-express start-server --port 8000 --working-directory /app/web --url-alias /static /app/web/static --reload-on-changes /app/web/web/wsgi.py" 
