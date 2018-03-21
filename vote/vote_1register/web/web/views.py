@@ -10,12 +10,18 @@ from web import models
 def registration_check(request):
     return render(request, 'registration_check.html')
    
-#there should be some sort of login for poll worker (using database) and super poll worker (admin). so that they can access the site.
+
+
+
+#There should be some sort of login for poll worker (using database) and super poll worker (admin). so that they can access the site.
+
 
 
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):
+
+	#Try to query the voter registration database.
 	try:
 		req = urllib.request.Request('http://cs3240votingproject.org/pollingsite/'+ str(precinct_id) + + '/?key=' + str(api_key))
 	except e:
@@ -24,11 +30,17 @@ def fetch_voter_info(precinct_id, api_key):
 	resp_json = urllib.request.urlopen(req).read().decode('utf-8')
 	resp = json.loads(resp_json)
 
+	#Return information as a dictionary
 	return success(resp) 
 
+
+#Store voter information in the local database.
 def store_voter_info(precinct_id, api_key):	
+	#Fetch voter information
 	resp = fetch_voter_info(precinct_id, api_key)
 
+
+	#Store voter information if it worked.
 	if resp["status"]:
 		voters = resp["data"]["voters"]
 		for i in range(len(voters)):
@@ -43,7 +55,6 @@ def store_voter_info(precinct_id, api_key):
 		return success()
 	else:
 		return resp
-
 
 
 #Helper methods
