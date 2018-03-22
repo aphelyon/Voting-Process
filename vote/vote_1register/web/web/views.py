@@ -4,8 +4,13 @@ from django.template import loader
 import urllib.request
 import json
 from web import models
+import web.forms
 
 
+def login(request):
+    form = web.forms.LoginForm()
+    if request.method == "GET":
+        return render(request, 'login.html', {'form': form})
 
 def registration_check(request):
     return render(request, 'registration_check.html')
