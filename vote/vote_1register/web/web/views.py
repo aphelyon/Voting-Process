@@ -3,8 +3,7 @@ from django.shortcuts import render
 from django.template import loader
 import urllib.request
 import json
-from web import models
-import web.forms
+from web import models,views
 from django.contrib.auth.decorators import login_required
 
 def login(request):
@@ -14,7 +13,10 @@ def login(request):
 
 @login_required
 def registration_check(request):
-    return render(request, 'registration_check.html')
+    form = web.forms.RegistrationCheck()
+    if request.method == "POST":
+        return render(request, 'registration_check.html', {'form': form})
+
    
 
 
