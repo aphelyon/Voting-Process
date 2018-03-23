@@ -1,13 +1,15 @@
-{% extends 'base.html' %}
 {% load static %}
-<img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+<img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+
 {% block content %}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
-{% endif %}
+<h2 class="center"> Voter Registration Check </h2> </br>
+<form method="post" class="center">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Submit</button>
+</form>
+
 {% endblock %}
