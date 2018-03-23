@@ -1,32 +1,13 @@
+{% extends 'base.html' %}
 {% load static %}
-
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-
-
 <img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
-<button class="logout">Logout</button> </br></br></br></br>
-
-
-
-<h2 class="center"> Check Voter Registration:</h2> </br>
-
-<form class="center"> 
-    <table class="center">
-        <tr>
-            <td>First Name: 
-            <input type="text" name="firstname"></td>
-            <td>Last Name: 
-            <input type="text" name="lastname"></td> 
-        </tr>
-        <tr>
-            <td>Date of Birth: 
-            <input type="date" name="dob"></td>
-            <td>Last 4 Digits of SSN:
-            <input type="text" name="ssn"></td>
-        </tr>
-    </table>
-
-</br> </br>
-
-    <button type="submit" class="submit">GO</button>
-</form>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+  <p><a href="{% url 'logout' %}">logout</a></p>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">login</a>
+{% endif %}
+{% endblock %}

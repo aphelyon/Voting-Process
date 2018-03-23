@@ -1,0 +1,15 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+<img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+
+{% block content %}
+<h2 class="center"> Poll Worker Login</h2> </br>
+<form method="post" class="center">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Login</button>
+</form>
+
+{% endblock %}

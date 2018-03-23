@@ -27,7 +27,9 @@ SECRET_KEY = '7qan#l#d+oa%m$)-ta1)39s#$2+#k)2sgbs&gn42!4wqi7g(ud'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+LOGIN_REDIRECT_URL = '/registration_check'
+LOGIN_URL = '/login'
+LOGOUT_REDIRECT_URL = '/login'
 
 # Application definition
 

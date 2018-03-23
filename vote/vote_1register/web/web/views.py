@@ -4,9 +4,15 @@ from django.template import loader
 import urllib.request
 import json
 from web import models
+import web.forms
+from django.contrib.auth.decorators import login_required
 
+def login(request):
+    form = web.forms.LoginForm()
+    if request.method == "POST":
+        return render(request, 'login.html', {'form': form})
 
-
+@login_required
 def registration_check(request):
     return render(request, 'registration_check.html')
    
