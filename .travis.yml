@@ -14,11 +14,7 @@ before_script:
 
 script:
   -  docker exec -it vote1register_web_1 bash -c "cd vote/vote_1register/web && bash ./tests.sh"
-  -  docker exec -it vote1register_proc_1 bash -c "cd vote/vote_1register/proc && bash ./tests.sh"
   -  docker exec -it vote2cast_web_1 bash -c "cd vote/vote_2cast/web && bash ./tests.sh"
-  -  docker exec -it vote2cast_proc_1 bash -c "cd vote/vote_2cast/proc && bash ./tests.sh"  
-  -  docker exec -it vote2cast_models_1 bash -c "cd vote/vote_2cast/models && bash ./tests.sh"  
-
 
 after_script:
  - docker-compose -f ./vote/vote_1register/docker-compose.yml stop
