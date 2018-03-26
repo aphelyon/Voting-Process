@@ -14,3 +14,12 @@
 Google Drive Folder: https://drive.google.com/drive/u/1/folders/1y6NvqFzQrZ47ByXMKgsk-_ArwnkaOov6
 
 Slack Channel: https://goofy-goobers-uva.slack.com/
+
+
+## To create a superuser
+Go to your terminal
+docker-compose up (if it isn't currently running)
+open a new terminal window
+
+docker exec -it vote_web_1 bash
+python web/manage.py createsuperuser
