@@ -3,21 +3,32 @@ from django.shortcuts import render
 from django.template import loader
 import urllib.request
 import json
-from web import models,views
+from web import models
+import web.forms
 from django.contrib.auth.decorators import login_required
 
 def login(request):
     form = web.forms.LoginForm()
-    if request.method == "POST":
+    if request.method == "GET":
         return render(request, 'login.html', {'form': form})
 
 @login_required
 def registration_check(request):
     form = web.forms.RegistrationCheck()
-    if request.method == "POST":
+    if request.method == "GET":
         return render(request, 'registration_check.html', {'form': form})
 
-   
+@login_required
+def create_candidate(request):
+    form = web.forms.CandidateForm()
+    if request.method == "GET":
+        return render(request, 'create_candidate.html', {'form': form})
+
+@login_required
+def create_election(request):
+    form = web.forms.ElectionForm()
+    if request.method == "GET":
+        return render(request, 'create_election.html', {'form': form})
 
 
 
