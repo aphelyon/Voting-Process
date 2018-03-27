@@ -71,7 +71,7 @@ def elections(request):
     all_the_elections = [election.as_json() for election in get_elections]
     return JsonResponse({'elections': all_the_elections})
 
-def elections(request):
+def candidates(request):
     get_candidates = Candidate.objects.all()
     all_the_candidates = [candidate.as_json() for candidate in get_candidates]
     return JsonResponse({'candidates': all_the_candidates})
