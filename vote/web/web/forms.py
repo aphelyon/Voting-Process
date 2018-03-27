@@ -18,9 +18,10 @@ class CandidateForm(forms.Form):
     party = forms.CharField(max_length=100, label="Party")
 
 class ElectionForm(forms.Form):
-    election_date = forms.DateField(label="Election Date", input_formats=['%Y-%m'])
+    election_ID = forms.DateField(label="Election Date", input_formats=['%Y-%m'])
     election = (('Primary', 'Primary'), ('General', 'General'), ('Referendum', 'Referendum'))
     election_type = forms.CharField(label='Type of Election', widget=forms.Select(choices=election))
 
 class AddForm(forms.Form):
     position = forms.CharField(max_length=100, label="Position")
+    candidateID = forms.IntegerField(label="Candidate ID")

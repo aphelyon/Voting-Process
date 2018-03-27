@@ -27,4 +27,6 @@ urlpatterns = [
     path('create_candidate', views.create_candidate, name='create_candidate'),
     path('create_election', views.create_election, name='create_election'),
     path('add_candidate', views.add_candidate, name='add_candidate'),
+    path('elections', views.elections, name='elections'),
+    path('candidates', views.elections, name='candidates'),
 ]
