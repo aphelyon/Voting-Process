@@ -18,8 +18,11 @@ Slack Channel: https://goofy-goobers-uva.slack.com/
 
 ## To create a superuser
 Go to your terminal
+
 docker-compose up (if it isn't currently running)
+
 open a new terminal window
 
 docker exec -it vote_web_1 bash
+
 python web/manage.py createsuperuser
