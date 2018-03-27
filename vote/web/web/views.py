@@ -30,6 +30,12 @@ def create_election(request):
     if request.method == "GET":
         return render(request, 'create_election.html', {'form': form})
 
+@login_required
+def add_candidate(request):
+    form = web.forms.AddForm()
+    if request.method == "GET":
+        return render(request, 'add_candidate.html', {'form': form})
+
 
 
 #There should be some sort of login for poll worker (using database) and super poll worker (admin). so that they can access the site.
