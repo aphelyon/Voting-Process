@@ -1,0 +1,18 @@
+{% load static %}
+{% if user.is_superuser %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+<img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+
+{% block content %}
+<h2 class="center"> Create a Candidate </h2> </br>
+<form method="post" class="center">
+{% csrf_token %}
+{{ form.as_p }}
+<button type="submit">Create</button>
+</form>
+{% endblock %}
+{% else %}
+<h2 class="center"> Access Denied </h2>
+<p>You do not have permission to view this page.</p>
+{% endif %}

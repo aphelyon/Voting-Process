@@ -1,28 +1,95 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template import loader
+from django.urls import resolve
 import urllib.request
 import json
-from web import models,views
+from web import models
+from web.models import *
+import web.forms
 from django.contrib.auth.decorators import login_required
+
 
 def login(request):
     form = web.forms.LoginForm()
-    if request.method == "POST":
+    if request.method == "GET":
         return render(request, 'login.html', {'form': form})
 
 @login_required
 def registration_check(request):
     form = web.forms.RegistrationCheck()
-    if request.method == "POST":
+    if request.method == "GET":
         return render(request, 'registration_check.html', {'form': form})
 
-   
+@login_required
+def create_candidate(request):
+    form = web.forms.CandidateForm()
+    if request.method == "GET":
+        return render(request, 'create_candidate.html', {'form': form})
 
+    f = web.forms.CandidateForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'create_candidate.html', {'form': f})
+    first_name = f.cleaned_data['firstname']
+    last_name = f.cleaned_data['lastname']
+    party= f.cleaned_data['party']
+    dob = f.cleaned_data['dob']
+    num_votes = 0
+    new_candidate = Candidate.objects.create(first_name=first_name, last_name=last_name, num_votes=num_votes, party=party, dob=dob)
+    response = {"Status": "200", "candidate": new_candidate.as_json()}
+    return JsonResponse({'ok': True, 'results': response})
 
+@login_required
+def create_election(request):
+    form = web.forms.ElectionForm()
+
+    if request.method == "GET":
+        return render(request, 'create_election.html', {'form': form})
+
+    f = web.forms.ElectionForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'create_election.html', {'form': f})
+    election_ID = f.cleaned_data['election_ID']
+    electType = f.cleaned_data['election_type']
+    month = election_ID.month
+    year = election_ID.year
+    if month < 10:
+        electionID = "" + str(year) + "-0" + str(month)
+    else:
+        electionID = "" + str(year) + "-" + str(month)
+    new_election = Election.objects.create(election_id=electionID, election_type=electType)
+    response = {"Status": "200", "Election": new_election.as_json()}
+    return JsonResponse({'ok': True, 'results': response})
+
+@login_required
+def add_candidate(request):
+    form = web.forms.AddForm()
+    if request.method == "GET":
+        return render(request, 'add_candidate.html', {'form': form})
+
+def elections(request):
+    get_elections = Election.objects.all()
+    all_the_elections = [election.as_json() for election in get_elections]
+    return JsonResponse({'elections': all_the_elections})
+
+def candidates(request):
+    get_candidates = Candidate.objects.all()
+    all_the_candidates = [candidate.as_json() for candidate in get_candidates]
+    return JsonResponse({'candidates': all_the_candidates})
 
 #There should be some sort of login for poll worker (using database) and super poll worker (admin). so that they can access the site.
 
+def election_stuff(request, year, month):
+    get_elections = Election.objects.all()
+    all_the_elections = [election.as_json() for election in get_elections]
+    success = False
+    for election in all_the_elections:
+        if str(election['election_id']) == str(year) + "-" + str(month):
+            success = True
+    if (success):
+        return JsonResponse({'success': success})
+    else:
+        return render(request, 'failure.html')
 
 
 

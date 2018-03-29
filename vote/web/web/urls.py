@@ -24,4 +24,10 @@ urlpatterns = [
     path('registration_check/', views.registration_check, name='checkin'),
     path('login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
     path('logout/', auth_views.logout, {'next_page': 'login'}, name='logout'),
+    path('create_candidate', views.create_candidate, name='create_candidate'),
+    path('create_election', views.create_election, name='create_election'),
+    path('add_candidate', views.add_candidate, name='add_candidate'),
+    path('elections', views.elections, name='elections'),
+    path('elections/<int:year>-<int:month>/', views.election_stuff, name='election_stuff'),
+    path('candidates', views.candidates, name='candidates'),
 ]
