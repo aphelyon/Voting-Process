@@ -28,5 +28,6 @@ urlpatterns = [
     path('create_election', views.create_election, name='create_election'),
     path('add_candidate', views.add_candidate, name='add_candidate'),
     path('elections', views.elections, name='elections'),
+    path('elections/<int:year>-<int:month>/', views.election_stuff, name='election_stuff'),
     path('candidates', views.candidates, name='candidates'),
 ]

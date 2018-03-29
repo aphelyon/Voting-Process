@@ -23,10 +23,10 @@ class AnonVote(models.Model):
 
 
 class Election(models.Model):
-    id = models.CharField(max_length=100)
-    type = models.CharField(max_length=100, primary_key=True)
+    election_id = models.CharField(max_length=100, primary_key=True)
+    election_type = models.CharField(max_length=100)
     def as_json(self):
-        return dict(id = self.id, type=self.type)
+        return dict(election_id = self.election_id, election_type=self.election_type)
 
 class Position(models.Model):
     positionName = models.CharField(max_length=100)

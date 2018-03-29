@@ -1,6 +1,7 @@
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.template import loader
+from django.urls import resolve
 import urllib.request
 import json
 from web import models
@@ -56,7 +57,7 @@ def create_election(request):
         electionID = "" + str(year) + "-0" + str(month)
     else:
         electionID = "" + str(year) + "-" + str(month)
-    new_election = Election.objects.create(id=electionID, type=electType)
+    new_election = Election.objects.create(election_id=electionID, election_type=electType)
     response = {"Status": "200", "Election": new_election.as_json()}
     return JsonResponse({'ok': True, 'results': response})
 
@@ -78,6 +79,17 @@ def candidates(request):
 
 #There should be some sort of login for poll worker (using database) and super poll worker (admin). so that they can access the site.
 
+def election_stuff(request, year, month):
+    get_elections = Election.objects.all()
+    all_the_elections = [election.as_json() for election in get_elections]
+    success = False
+    for election in all_the_elections:
+        if str(election['election_id']) == str(year) + "-" + str(month):
+            success = True
+    if (success):
+        return JsonResponse({'success': success})
+    else:
+        return render(request, 'failure.html')
 
 
 
