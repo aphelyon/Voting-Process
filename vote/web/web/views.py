@@ -8,12 +8,15 @@ from web import models
 from web.models import *
 import web.forms
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 
 
 def login(request):
+    if request.user.is_authenticated:
+        return registration_check(request)
     form = web.forms.LoginForm()
-    if request.method == "GET":
-        return render(request, 'login.html', {'form': form})
+    if request.method in ["POST", "GET"]:
+        return auth_views.login(request, 'login.html')
 
 def voter_login(request):
     form = web.forms.VoterLoginForm()
