@@ -30,6 +30,12 @@ def registration_check(request):
         return render(request, 'registration_check.html', {'form': form})
 
 @login_required
+def voterregistered(request):
+    form = web.forms.RegistrationCheck()
+    if request.method == "GET":
+        return render(request, 'voterregistered.html', {'form': form})
+
+@login_required
 def create_candidate(request):
     form = web.forms.CandidateForm()
     if request.method == "GET":
