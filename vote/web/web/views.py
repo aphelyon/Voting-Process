@@ -23,6 +23,15 @@ def voter_login(request):
 def instructions1(request):
     return render(request,'instructions1.html')
 
+def instructions2(request):
+    return render(request,'instructions2.html')
+
+def overview(request):
+    return render(request,'overview.html')
+
+def voter_finished(request):
+    return render(request,'voter_finished.html')
+
 @login_required
 def registration_check(request):
     form = web.forms.RegistrationCheck()

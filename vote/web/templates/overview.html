@@ -1,0 +1,19 @@
+{% extends "voting_base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+<h2 class="center"> Overview </h2> </br>
+<center><p>Use the "Next" button or click on a question to navigate. To return to this page, click "Overview" at the bottom of the screen at any time</p></center>
+<br>
+<footer>
+    <div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; left:20">
+        <a href="../instructions2">Back</a>
+    </div>
+    <div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; right:20">
+        <a href="../overview">Next</a>
+    </div>
+</footer>
+
+{% endblock %}
