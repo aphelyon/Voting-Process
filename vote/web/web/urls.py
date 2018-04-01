@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('registration_check/', views.registration_check, name='checkin'),
     path('voterregistered/', views.voterregistered, name='registered'),
+    path('voternotregistered/', views.voternotregistered, name='notregistered'),
     path('login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
     path('logout/', auth_views.logout, {'next_page': 'login'}, name='logout'),
     path('voter_login/', views.voter_login, name='voter_login'),

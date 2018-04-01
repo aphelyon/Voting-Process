@@ -12,8 +12,7 @@ class VoterLoginForm(forms.Form):
 class RegistrationCheck(forms.Form):
     firstname = forms.CharField(max_length = 100, label = "First Name")
     lastname = forms.CharField(max_length = 100, label = "Last Name")
-    dob = forms.CharField(max_length = 20, label = "Date of Birth")
-    ssn = forms.CharField(max_length = 4, label = "Last 4 digits of SSN")
+    dob = forms.DateField(label = "Date of Birth")
 
 class CandidateForm(forms.Form):
     firstname = forms.CharField(max_length=100, label="First Name")
