@@ -38,6 +38,19 @@ def registration_check(request):
     if request.method == "GET":
         return render(request, 'registration_check.html', {'form': form})
 
+    sample_voter = {"fn":"john", "ln": "doe", "dob": "01/01/1970"}
+
+    f = web.forms.RegistrationCheck(request.POST)
+    if not f.is_valid():
+        return render(request, 'registration_check.html', {'form': f})
+    first_name = f.cleaned_data['firstname']
+    last_name = f.cleaned_data['lastname']
+    dob = f.cleaned_data['dob']
+    if (sample_voter["fn"] == first_name) and (sample_voter["ln"] == last_name) and (sample_voter["dob"] == dob):
+        return render(request, 'voterregistered.html')
+    else:
+        return render(request, 'voternotregistered.html')
+
 @login_required
 def voterregistered(request):
     form = web.forms.RegistrationCheck()
