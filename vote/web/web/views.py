@@ -113,7 +113,7 @@ def election_stuff(request, year, month):
     all_the_elections = [election.as_json() for election in get_elections]
     success = False
     for election in all_the_elections:
-        if str(election['election_id']) == str(year) + "-" + str(month):
+        if str(election['election_id']) == str(year) + "-" + str(month) or str(election['election_id']) == str(year) + "-0" + str(month):
             success = True
     if (success):
         return JsonResponse({'success': success})
