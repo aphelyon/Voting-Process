@@ -15,6 +15,11 @@ def login(request):
     if request.method == "GET":
         return render(request, 'login.html', {'form': form})
 
+def voter_login(request):
+    form = web.forms.VoterLoginForm()
+    if request.method == "GET":
+        return render(request, 'voter_login.html', {'form':form})
+
 @login_required
 def registration_check(request):
     form = web.forms.RegistrationCheck()
