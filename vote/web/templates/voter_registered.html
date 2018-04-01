@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<form id="form_successful">
+	<center>
+		<h1> THIS VOTER IS REGISTERED TO VOTE. </h1>
+	</center>
+  <p>
+    <center>
+    <button type="submit">PRINT BALLOT</button>
+  </center>
+  </p>
+</form>
+<footer>
+  <div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; left:20">
+      <a href="../registration_check">&#8592; Go Back</a>
+  </div>
+</footer>
+{% endblock %}

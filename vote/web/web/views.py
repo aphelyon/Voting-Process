@@ -41,17 +41,26 @@ def registration_check(request):
     if request.method == "GET":
         return render(request, 'registration_check.html', {'form': form})
 
-@login_required
-def voterregistered(request):
-    form = web.forms.RegistrationCheck()
-    if request.method == "GET":
-        return render(request, 'voterregistered.html', {'form': form})
+    sample_voter = {"fn":"john", "ln": "doe", "dob": "01/01/1970"}
+
+    f = web.forms.RegistrationCheck(request.POST)
+    if not f.is_valid():
+        return render(request, 'registration_check.html', {'form': f})
+    first_name = f.cleaned_data['firstname']
+    last_name = f.cleaned_data['lastname']
+    dob = f.cleaned_data['dob']
+    if (sample_voter["fn"] == first_name) and (sample_voter["ln"] == last_name) and (sample_voter["dob"] == dob):
+        return voter_registered(request)
+    else:
+        return voter_not_registered(request)
 
 @login_required
-def voternotregistered(request):
-    form = web.forms.RegistrationCheck()
-    if request.method == "GET":
-        return render(request, 'voternotregistered.html', {'form': form})
+def voter_registered(request):
+    return render(request, 'voter_registered.html')
+
+@login_required
+def voter_not_registered(request):
+    return render(request, 'voter_not_registered.html')
 
 @login_required
 def create_candidate(request):
@@ -116,7 +125,7 @@ def election_stuff(request, year, month):
     all_the_elections = [election.as_json() for election in get_elections]
     success = False
     for election in all_the_elections:
-        if str(election['election_id']) == str(year) + "-" + str(month):
+        if str(election['election_id']) == str(year) + "-" + str(month) or str(election['election_id']) == str(year) + "-0" + str(month):
             success = True
     if (success):
         return JsonResponse({'success': success})
