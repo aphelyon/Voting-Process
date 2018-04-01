@@ -45,6 +45,12 @@ def voterregistered(request):
         return render(request, 'voterregistered.html', {'form': form})
 
 @login_required
+def voternotregistered(request):
+    form = web.forms.RegistrationCheck()
+    if request.method == "GET":
+        return render(request, 'voternotregistered.html', {'form': form})
+
+@login_required
 def create_candidate(request):
     form = web.forms.CandidateForm()
     if request.method == "GET":
@@ -129,11 +135,11 @@ def fetch_voter_info(precinct_id, api_key):
 	resp = json.loads(resp_json)
 
 	#Return information as a dictionary
-	return success(resp) 
+	return success(resp)
 
 
 #Store voter information in the local database.
-def store_voter_info(precinct_id, api_key):	
+def store_voter_info(precinct_id, api_key):
 	#Fetch voter information
 	resp = fetch_voter_info(precinct_id, api_key)
 
