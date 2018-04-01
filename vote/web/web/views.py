@@ -29,6 +29,9 @@ def instructions2(request):
 def overview(request):
     return render(request,'overview.html')
 
+def voter_finished(request):
+    return render(request,'voter_finished.html')
+
 @login_required
 def registration_check(request):
     form = web.forms.RegistrationCheck()
