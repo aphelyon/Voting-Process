@@ -50,21 +50,17 @@ def registration_check(request):
     last_name = f.cleaned_data['lastname']
     dob = f.cleaned_data['dob']
     if (sample_voter["fn"] == first_name) and (sample_voter["ln"] == last_name) and (sample_voter["dob"] == dob):
-        return render(request, 'voterregistered.html')
+        return voter_registered(request)
     else:
-        return render(request, 'voternotregistered.html')
+        return voter_not_registered(request)
 
 @login_required
-def voterregistered(request):
-    form = web.forms.RegistrationCheck()
-    if request.method == "GET":
-        return render(request, 'voterregistered.html', {'form': form})
+def voter_registered(request):
+    return render(request, 'voter_registered.html')
 
 @login_required
-def voternotregistered(request):
-    form = web.forms.RegistrationCheck()
-    if request.method == "GET":
-        return render(request, 'voternotregistered.html', {'form': form})
+def voter_not_registered(request):
+    return render(request, 'voter_not_registered.html')
 
 @login_required
 def create_candidate(request):
