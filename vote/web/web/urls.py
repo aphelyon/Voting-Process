@@ -33,4 +33,6 @@ urlpatterns = [
     path('elections/<int:year>-<int:month>/', views.election_stuff, name='election_stuff'),
     path('candidates', views.candidates, name='candidates'),
     path('instructions1',auth_views.instructions1,name='instructions1'),
+    path('instructions2',auth_views.instructions2,name='instructions2'),
+    path('overview',auth_views.overview,name='overview'),
 ]
