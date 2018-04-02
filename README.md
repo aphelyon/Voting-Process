@@ -26,3 +26,12 @@ open a new terminal window
 docker exec -it vote_web_1 bash
 
 python web/manage.py createsuperuser
+
+## Name of valid, registered voter
+After logging in with your self-made superuser...
+
+1. First name: john
+
+2. Last name: doe
+
+3. DOB: 01/01/1970
