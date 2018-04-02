@@ -151,8 +151,25 @@ def election_details(request, year, month):
     for election in all_the_elections:
         if str(election['election_id']) == str(year) + "-" + str(month) or str(election['election_id']) == str(year) + "-0" + str(month):
             success = True
+            election_id = str(election['election_id'])
     if (success):
-        return JsonResponse({'success': success})
+        election_object = Election.objects.get(election_id=election_id)
+        positions = []
+        candidates = []
+        position_dictionary = {}
+        for candidate in election_object.candidates.all():
+            candidates.append(candidate)
+            if candidate.position not in positions:
+                positions.append(candidate.position)
+        for position in positions:
+            candidates = []
+            for candidate in election_object.candidates.all():
+                if position == candidate.position:
+                    candid = dict(first_name=candidate.first_name, last_name=candidate.last_name, num_votes=candidate.num_votes,
+                         party=candidate.party)
+                    candidates.append(candid)
+            position_dictionary[position] = candidates
+        return JsonResponse({'success': success, 'positions': position_dictionary})
     else:
         return render(request, 'failure.html')
 
