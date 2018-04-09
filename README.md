@@ -42,7 +42,7 @@ For Linux:
 
 1. Run: pip install python-escpos
 2. Run: lsusb (this should show you that you have a printer connected)
-3. Create the file /etc/udev/rules.d/99-escpos.rules and add the following: SUBSYSTEM=="usb", ATTRS{idVendor}=="1a2b", ATTRS{idProduct}=="1a2b", MODE="0664", GROUP="dialout" Replace idVendor and idProduct hex numbers with the ones that you got from the previous step. 
+3. Create the file /etc/udev/rules.d/99-escpos.rules and add the following: SUBSYSTEM=="usb", ATTRS{idVendor}=="0456", ATTRS{idProduct}=="0808", MODE="0664", GROUP="dialout" Replace idVendor and idProduct hex numbers with the ones that you got from the previous step. 
 4. Run: usermod -a -G dialout yourcomputingid (if this doesn't work, run sudo !! and then run: sudo usermod -a -G dialout yourcomputingid)
 5. Run: sudo python
 6. Run: from escpos import printer
