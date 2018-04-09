@@ -6,7 +6,7 @@
 
 
 web:
-    image: arun8r/djmodwsgi #Same image as above.
+    image: arun8r/djmodwsgi:latest #Same image as above.
     
     volumes:
       - "$PWD:/app"
