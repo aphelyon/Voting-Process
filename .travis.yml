@@ -11,7 +11,7 @@ before_install:
 before_script:
  - docker-compose -f ./vote/docker-compose_TRAVIS.yml up -d
 script:
-  -  docker exec -it vote_web_1 bash -c "cd web && bash ./tests.sh"
+  -  docker exec -it vote_web_1 bash -c "cd vote/web && bash ./tests.sh"
 after_script:
  - docker-compose -f ./vote/docker-compose_TRAVIS.yml stop
  - docker-compose -f ./vote/docker-compose_TRAVIS.yml -f
