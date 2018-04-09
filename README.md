@@ -40,15 +40,10 @@ After logging in with your self-made superuser...
 ## Set Up Printer
 For Linux:
 
-1. Run: pip install python-escpos
-2. Run: lsusb (this should show you that you have a printer connected)
-3. Create the file /etc/udev/rules.d/99-escpos.rules and add the following: SUBSYSTEM=="usb", ATTRS{idVendor}=="0456", ATTRS{idProduct}=="0808", MODE="0664", GROUP="dialout" Replace idVendor and idProduct hex numbers with the ones that you got from the previous step. 
-4. Run: usermod -a -G dialout yourcomputingid (if this doesn't work, run sudo !! and then run: sudo usermod -a -G dialout yourcomputingid)
-5. Run: sudo python
-6. Run: from escpos import printer
-7. Run: p = printer.Usb(idVendor=0x0456, idProduct=0x0808, in_ep=0x81, out_ep=0x03)
-8. Run: p.text("Hello World")
-9. Run: p.cut()
+1. Run python
+2. from escpos import printer
+3. p = printer.Usb(idVendor=0x0456, idProduct=0x0808, in_ep=0x81, out_ep=0x03)
+4. p.text("Hello World")
+5. p.cut()
 
 The above sequence of steps should print "Hello World" from the thermal printer.
-We need to use /dev/bus/usb/001/003 and add that to docker so we can print from Docker. 
