@@ -2,7 +2,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
 {% if user.is_authenticated %}
-<div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; top:20; right:20;">
+<div type="button" class="div2">
     <a href="../logout">Logout</a>
 </div>
 {% endif %}
@@ -10,4 +10,5 @@
 <center>
   <img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
 </center>
+
 {% block content %}{% endblock %}
