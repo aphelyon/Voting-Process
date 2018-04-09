@@ -10,6 +10,7 @@ web:
     
     volumes:
       - "$PWD:/app"
+      - /dev/bus/usb:/dev/bus/usb
 
     ports:
       - "8000:8000"        #Expose port 8000 on your machine to port 8000 of the docker container. Eventually, clients will connect to port 8000
