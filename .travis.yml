@@ -13,5 +13,5 @@ before_script:
 script:
   -  docker exec -it vote_web_1 bash -c "cd vote/web && bash ./tests.sh"
 after_script:
- - docker-compose -f ./vote/docker-compose.yml stop
- - docker-compose -f ./vote/docker-compose.yml -f
+ - docker-compose -f ./vote/docker-compose_TRAVIS.yml stop
+ - docker-compose -f ./vote/docker-compose_TRAVIS.yml -f
