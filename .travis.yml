@@ -9,9 +9,9 @@ before_install:
  - docker pull arun8r/djmodwsgi
  
 before_script:
- - docker-compose -f ./vote/docker-compose.yml up -d
+ - docker-compose -f ./vote/docker-compose_TRAVIS.yml up -d
 script:
   -  docker exec -it vote_web_1 bash -c "cd web && bash ./tests.sh"
 after_script:
- - docker-compose -f ./vote/docker-compose.yml stop
- - docker-compose -f ./vote/docker-compose.yml -f
+ - docker-compose -f ./vote/docker-compose_TRAVIS.yml stop
+ - docker-compose -f ./vote/docker-compose_TRAVIS.yml -f
