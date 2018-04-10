@@ -67,27 +67,24 @@ def create_candidate(request):
     form = web.forms.CandidateForm()
     if request.method == "GET":
         return render(request, 'create_candidate.html', {'form': form})
-
     f = web.forms.CandidateForm(request.POST)
     if not f.is_valid():
         return render(request, 'create_candidate.html', {'form': f})
     first_name = f.cleaned_data['firstname']
     last_name = f.cleaned_data['lastname']
-    party= f.cleaned_data['party']
-    position = f.cleaned_data['position']
     dob = f.cleaned_data['dob']
-    num_votes = 0
     get_candidates = Candidate.objects.all()
     all_the_candidates = [candidate.as_json() for candidate in get_candidates]
     failure = False
     for candidate in all_the_candidates:
-        if first_name == candidate['first_name'] and last_name == candidate['last_name'] and position == candidate['position'] and dob == candidate['dob']:
+        if first_name == candidate['first_name'] and last_name == candidate['last_name']  and dob == candidate['dob']:
             failure = True
     if failure:
-        return JsonResponse({'ok': False, 'error_msg': "Candidate under this position already exists"})
-    new_candidate = Candidate.objects.create(first_name=first_name, last_name=last_name, num_votes=num_votes, party=party, dob=dob, position=position)
-    response = {"Status": "200", "candidate": new_candidate.as_json()}
-    return JsonResponse({'ok': True, 'results': response})
+        response = {'ok': False, 'error_msg': "Candidate already exists", 'form': form}
+        return render(request, 'create_candidate.html', response)
+    new_candidate = Candidate.objects.create(first_name=first_name, last_name=last_name, dob=dob)
+    response = {"Status": "200", 'ok': True, "candidate": new_candidate.as_json(), 'form': form, 'success_msg': "Candidate was successfully created"}
+    return render(request, 'create_candidate.html', response)
 
 @login_required
 def create_election(request):
@@ -98,18 +95,28 @@ def create_election(request):
 
     f = web.forms.ElectionForm(request.POST)
     if not f.is_valid():
-        return render(request, 'create_election.html', {'form': f})
+        response = {'form': f, 'ok': False, 'error_msg': "Date Format is invalid"}
+        return render(request, 'create_election.html', response)
     election_ID = f.cleaned_data['election_ID']
     electType = f.cleaned_data['election_type']
     month = election_ID.month
     year = election_ID.year
+    get_elections = Election.objects.all()
+    all_the_elections = [election.as_json() for election in get_elections]
     if month < 10:
         electionID = "" + str(year) + "-0" + str(month)
     else:
         electionID = "" + str(year) + "-" + str(month)
+    failure = False
+    for election in all_the_elections:
+        if electionID == election['election_id']:
+            failure = True
+    if failure:
+        response = {'form': f, 'ok': False, 'error_msg': "Election already exists"}
+        return render(request, 'create_election.html', response)
     new_election = Election.objects.create(election_id=electionID, election_type=electType)
-    response = {"Status": "200", "Election": new_election.as_json()}
-    return JsonResponse({'ok': True, 'results': response})
+    response = {"Status": "200", "Election": new_election.as_json(), 'ok': True, 'success_msg': "Election was successfully created", 'form': form}
+    return render(request, 'create_election.html', response)
 
 @login_required
 def add_candidate(request):
