@@ -18,6 +18,9 @@ from django.urls import path
 from web import views
 from django.contrib.auth import views as auth_views
 
+#for the control panel, there is no URL to it; that's on purpose, instead you're going to search one of the pages on the control panel,
+#such as create election, create candidate, create ballot entry, etc. because those are all extensions of the control panel
+
 
 urlpatterns = [
     path('', auth_views.login, {'template_name': 'login.html'}, name='login'),
