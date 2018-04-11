@@ -34,6 +34,7 @@ urlpatterns = [
     path('create_ballot_entry', views.create_ballot_entry, name='create_ballot_entry'),
     path('elections', views.elections, name='elections'),
     path('elections/<int:year>-<int:month>/', views.election_details, name='election_details'),
+    path('candidates/<first_name>-<last_name>-<int:year>/', views.candidate_details, name='candidate_details'),
     path('election_selection/', views.election_selection, name='election_selection'),
     path('candidates', views.candidates, name='candidates'),
     path('instructions1', views.instructions1,name='instructions1'),

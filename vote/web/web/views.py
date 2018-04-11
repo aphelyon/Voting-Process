@@ -191,6 +191,34 @@ def election_details(request, year, month):
     else:
         return render(request, 'failure.html')
 
+def candidate_details(request, first_name, last_name, year):
+    get_ballot_entries = BallotEntry.objects.all()
+    ballot = [ballot_entry.as_json() for ballot_entry in get_ballot_entries]
+    success = False
+    for ballot_entry in ballot:
+        c = Candidate.objects.get(pk=ballot_entry['candidate_id'])
+        if str(c.first_name) == str(first_name) and str(c.last_name) == str(last_name) and str(c.dob.year) == str(year):
+            success = True
+            candidate = c
+    if (success):
+        elections = []
+        ballot_entries = []
+        election_dictionary = {}
+        for ballot_entry in candidate.ballotEntries.all():
+            ballot_entries.append(ballot_entry)
+            if ballot_entry.election_id not in elections:
+                elections.append(ballot_entry.election_id)
+        for election in elections:
+            ballotEntries = []
+            for ballot_entry in candidate.ballotEntries.all():
+                if election == ballot_entry.election_id:
+                    ballot_entry_display = dict(party=ballot_entry.party, position=ballot_entry.position, num_votes=ballot_entry.num_votes)
+                    ballotEntries.append(ballot_entry_display)
+            election_dictionary[election] = ballotEntries
+        return JsonResponse({'success': success, 'Elections': election_dictionary})
+    else:
+        return render(request, 'failure_candidate.html')
+
 def election_selection(request):
     form = web.forms.ElectionSelectionForm()
     if request.method == "GET":
