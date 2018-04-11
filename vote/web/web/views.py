@@ -172,20 +172,21 @@ def election_details(request, year, month):
     if (success):
         election_object = Election.objects.get(election_id=election_id)
         positions = []
-        candidates = []
+        ballot_entries = []
         position_dictionary = {}
-        for candidate in election_object.candidates.all():
-            candidates.append(candidate)
-            if candidate.position not in positions:
-                positions.append(candidate.position)
+        for ballot_entry in election_object.ballotEntries.all():
+            ballot_entries.append(ballot_entry)
+            if ballot_entry.position not in positions:
+                positions.append(ballot_entry.position)
         for position in positions:
-            candidates = []
-            for candidate in election_object.candidates.all():
-                if position == candidate.position:
-                    candid = dict(first_name=candidate.first_name, last_name=candidate.last_name, num_votes=candidate.num_votes,
-                         party=candidate.party)
-                    candidates.append(candid)
-            position_dictionary[position] = candidates
+            ballotEntries = []
+            for ballot_entry in election_object.ballotEntries.all():
+                if position == ballot_entry.position:
+                    c = Candidate.objects.get(pk=ballot_entry.candidate_id)
+                    candid = dict(first_name=c.first_name, last_name=c.last_name, num_votes=ballot_entry.num_votes,
+                         party=ballot_entry.party)
+                    ballotEntries.append(candid)
+            position_dictionary[position] = ballotEntries
         return JsonResponse({'success': success, 'positions': position_dictionary})
     else:
         return render(request, 'failure.html')
@@ -199,33 +200,34 @@ def election_selection(request):
         return render(request, 'election_selection.html', {'form': f})
     election = f.cleaned_data['election']
     request.session['election'] = election
-    return JsonResponse({'success': True})
+    return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election})
 
 def vote(request):
     if 'election' in request.session:
         election = request.session['election']
     elect = Election.objects.get(election_id=election)
     positions = []
-    candidates = []
-    for candidate in elect.candidates.all():
-        candidates.append(candidate)
-        if candidate.position not in positions:
-            positions.append(candidate.position)
-    form = web.forms.VoteForm(candidates=candidates, positions=positions)
+    ballot_entries = []
+    for ballot_entry in elect.ballotEntries.all():
+        ballot_entries.append(ballot_entry)
+        if ballot_entry.position not in positions:
+            positions.append(ballot_entry.position)
+    form = web.forms.VoteForm(ballot_entries=ballot_entries, positions=positions)
     if request.method == "GET":
         return render(request, 'vote.html', {'form': form})
-    f = web.forms.VoteForm(request.POST, candidates=candidates, positions=positions)
+    f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, positions=positions)
     if not f.is_valid():
         return render(request, 'vote.html', {'form': f})
-    voted_candidates = []
+    voted_ballot_entries = []
     for position in positions:
         candidate_pk = f.cleaned_data[position]
-        for candidate in elect.candidates.all():
-            if str(candidate.pk) == str(candidate_pk):
-                candidate.num_votes += 1
-                candidate.save()
-                voted_candidates.append(candidate.first_name + " " + candidate.last_name + " " + str(candidate.num_votes))
-    response = {"Status": "200", 'candidates': voted_candidates}
+        for ballot_entry in elect.ballotEntries.all():
+            if str(ballot_entry.candidate_id) == str(candidate_pk):
+                ballot_entry.num_votes += 1
+                ballot_entry.save()
+                candidate = Candidate.objects.get(pk=candidate_pk)
+                voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
+    response = {"Status": "200", 'candidates': voted_ballot_entries}
     return JsonResponse({'ok': True, 'results': response})
 
 #Voter registration information cataloging
