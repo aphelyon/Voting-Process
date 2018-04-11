@@ -40,13 +40,12 @@ After logging in with your self-made superuser...
 ## Set Up Printer
 For Linux:
 
-For Linux:
+1. Run: python
+2. Run: from escpos import printer
+3. Run: p = Usb(0x456,0x808,0,0x81,0x03)
+4. Run: p.qr("12345",size=7)
+5. Run: p.cut()
 
-1. Run python
-2. from escpos import printer
-3. p = printer.Usb(idVendor=0x0456, idProduct=0x0808, in_ep=0x81, out_ep=0x03)
-4. p.text("Hello World")
-5. p.cut()
 
 
 The above sequence of steps should print "Hello World" from the thermal printer.
