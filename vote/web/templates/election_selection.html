@@ -7,6 +7,7 @@
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
+    <ul><p>Don't see the election you want to select? <a href="{% url 'create_election' %}">Add it here.</a></p></ul>
 <button type="submit">Select</button>
 </form>
 {% endblock %}
