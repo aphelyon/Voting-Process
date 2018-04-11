@@ -50,4 +50,3 @@ For Linux:
 
 
 The above sequence of steps should print "Hello World" from the thermal printer.
-We need to use /dev/bus/usb/001/003 and add that to docker so we can print from Docker. 
