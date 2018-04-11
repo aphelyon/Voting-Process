@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
 
+
 def login(request):
     if request.user.is_authenticated:
         return registration_check(request)
@@ -119,25 +120,34 @@ def create_election(request):
     return render(request, 'create_election.html', response)
 
 @login_required
-def add_candidate(request):
+def create_ballot_entry(request):
     form = web.forms.AddForm()
     if request.method == "GET":
         return render(request, 'add_candidate.html', {'form': form})
     f = web.forms.AddForm(request.POST)
     if not f.is_valid():
         return render(request, 'add_candidate.html', {'form': f})
+    position = f.cleaned_data['position']
+    party = f.cleaned_data['party']
     election = f.cleaned_data['election']
     candidate = f.cleaned_data['candidate']
+    num_votes = 0
+    get_ballot_entries = BallotEntry.objects.all()
+    ballot = [ballot_entry.as_json() for ballot_entry in get_ballot_entries]
+    failure = False
+    for ballot_entry in ballot:
+        if position == ballot_entry['position'] and party == ballot_entry['party'] and election == ballot_entry['election_id'] and candidate == str(ballot_entry['candidate_id']):
+            failure = True
+    if failure:
+        response = {'ok': False, 'error_msg': "Ballot entry already exists", 'form': form}
+        return render(request, 'add_candidate.html', response)
+    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position)
     e = Election.objects.get(pk=election)
     c = Candidate.objects.get(pk=candidate)
-    e.candidates.add(c)
-    candid = []
-    candidates = e.candidates.all()
-    for candidat in candidates:
-        candid.append(candidat.first_name + " " + candidat.last_name)
-    response = {"Status": "200", "Election": e.as_json(), "candidates": candid}
-    return JsonResponse({'ok': True, 'results': response})
-
+    e.ballotEntries.add(new_ballot_entry)
+    c.ballotEntries.add(new_ballot_entry)
+    response = {"Status": "200", 'ok': True, 'success_msg': "Ballot Entry was successfully created", 'form': form, 'Ballot_Entry': new_ballot_entry.as_json()}
+    return render(request, 'add_candidate.html', response)
 
 def elections(request):
     get_elections = Election.objects.all()

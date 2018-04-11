@@ -46,6 +46,8 @@ class AddForm(forms.Form):
             tuple = (pk, elections)
             election_items.append(tuple)
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
+        self.fields['position'] = forms.CharField(max_length=100, label="Position")
+        self.fields['party'] = forms.CharField(max_length=100, label="Party")
 
 class ElectionSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):

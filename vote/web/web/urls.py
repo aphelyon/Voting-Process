@@ -31,7 +31,7 @@ urlpatterns = [
     path('voter_login/', views.voter_login, name='voter_login'),
     path('create_candidate', views.create_candidate, name='create_candidate'),
     path('create_election', views.create_election, name='create_election'),
-    path('add_candidate', views.add_candidate, name='add_candidate'),
+    path('create_ballot_entry', views.create_ballot_entry, name='create_ballot_entry'),
     path('elections', views.elections, name='elections'),
     path('elections/<int:year>-<int:month>/', views.election_details, name='election_details'),
     path('election_selection/', views.election_selection, name='election_selection'),
@@ -40,5 +40,5 @@ urlpatterns = [
     path('instructions2', views.instructions2,name='instructions2'),
     path('overview', views.overview,name='overview'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
-    path('vote', views.vote,name='vote'),
+    path('vote', views.vote,name='vote')
 ]
