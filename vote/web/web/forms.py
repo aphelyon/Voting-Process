@@ -22,7 +22,7 @@ class CandidateForm(forms.Form):
 
 class ElectionForm(forms.Form):
     election_ID = forms.DateField(label="Election Date", input_formats=['%Y-%m'])
-    election = (('Primary', 'Primary'), ('General', 'General'), ('Referendum', 'Referendum'))
+    election = (('General', 'General'), ('Primary', 'Primary'), ('Referendum', 'Referendum'))
     election_type = forms.CharField(label='Type of Election', widget=forms.Select(choices=election))
 
 class AddForm(forms.Form):
@@ -79,4 +79,5 @@ class VoteForm(forms.Form):
                     candid = c.first_name + " " + c.last_name
                     tuple = (pk, candid)
                     ballot_entry_items.append(tuple)
+            ballot_entry_items.sort(key=lambda candidate: candidate[1])
             self.fields[position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
