@@ -5,11 +5,6 @@
 <img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
 
 {% block content %}
-    {% if ok %}
-   <h1 class="center"> {{ success_msg }} </h1> </br>
-    {% else %}
-    <h1 class="center"> {{ error_msg }} </h1> </br>
-    {% endif %}
 <h2 class="center"> Create a Candidate </h2> </br>
 <form method="post" class="center">
 {% csrf_token %}

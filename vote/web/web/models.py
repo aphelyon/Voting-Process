@@ -21,26 +21,23 @@ class AnonVote(models.Model):
     voted = models.CharField(max_length=75)
     voting_status = models.BooleanField()
 
-class BallotEntry(models.Model):
-    num_votes = models.IntegerField()
-    party = models.CharField(max_length=100)
-    position = models.CharField(max_length=100)
-    election_id = models.CharField(max_length=100)
-    candidate_id = models.IntegerField()
-    def as_json(self):
-        return dict(party=self.party, position=self.position, num_votes=self.num_votes, candidate_id=self.candidate_id, election_id=self.election_id)
+class Position(models.Model):
+    position_name = models.CharField(max_length=100)
 
 class Candidate(models.Model):
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    ballotEntries = models.ManyToManyField(BallotEntry)
+    num_votes = models.IntegerField()
+    party = models.CharField(max_length=100)
+    position = models.CharField(max_length=100)
     dob = models.DateField()
     def as_json(self):
-        return dict(first_name=self.first_name, last_name=self.last_name, dob=self.dob, pk=self.pk)
+        return dict(first_name = self.first_name, last_name=self.last_name, num_votes=self.num_votes, party=self.party, dob=self.dob, pk=self.pk, position = self.position)
 
 class Election(models.Model):
     election_id = models.CharField(max_length=100, primary_key=True)
     election_type = models.CharField(max_length=100)
-    ballotEntries = models.ManyToManyField(BallotEntry)
+    candidates = models.ManyToManyField(Candidate)
+    positions = models.ManyToManyField(Position)
     def as_json(self):
-        return dict(election_id=self.election_id, election_type=self.election_type, pk=self.pk)
+        return dict(election_id = self.election_id, election_type=self.election_type, pk=self.pk)

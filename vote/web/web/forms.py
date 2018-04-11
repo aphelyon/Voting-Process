@@ -18,7 +18,9 @@ class RegistrationCheck(forms.Form):
 class CandidateForm(forms.Form):
     firstname = forms.CharField(max_length=100, label="First Name")
     lastname = forms.CharField(max_length=100, label="Last Name")
-    dob = forms.DateField(label="Date of Birth")
+    dob = forms.DateField(label="Date of birth")
+    party = forms.CharField(max_length=100, label="Party")
+    position = forms.CharField(max_length=100, label="Position")
 
 class ElectionForm(forms.Form):
     election_ID = forms.DateField(label="Election Date", input_formats=['%Y-%m'])
