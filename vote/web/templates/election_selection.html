@@ -1,10 +1,7 @@
-{% load static %}
+{% extends "control_panel.html" %}
 {% if user.is_superuser %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-
-<img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
-
 {% block content %}
+<title>Election Selection</title>
 <h1 class="center"> {{ success_msg }} </h1> </br>
 <h2 class="center"> Select an Election for the voters to vote on </h2> </br>
 <form method="post" class="center">
