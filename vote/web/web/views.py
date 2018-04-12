@@ -4,6 +4,7 @@ from django.template import loader
 from django.urls import resolve
 import urllib.request
 import json
+import logging
 from web import models
 from web.models import *
 import web.forms
@@ -12,6 +13,8 @@ from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
 
 def login(request):
+    store_voter_info("0405","12345")
+
     if request.user.is_authenticated:
         return registration_check(request)
     form = web.forms.LoginForm()
@@ -142,7 +145,10 @@ def candidates(request):
     all_the_candidates = [candidate.as_json() for candidate in get_candidates]
     return JsonResponse({'candidates': all_the_candidates})
 
-#There should be some sort of login for poll worker (using database) and super poll worker (admin). so that they can access the site.
+def voters(request):
+    get_voters = Voter.objects.all()
+    all_the_voters = [voter.as_json() for voter in get_voters]
+    return JsonResponse({'voters': all_the_voters})
 
 def election_details(request, year, month):
     get_elections = Election.objects.all()
@@ -216,7 +222,8 @@ def fetch_voter_info(precinct_id, api_key):
 
 	#Try to query the voter registration database.
 	try:
-		req = urllib.request.Request('http://cs3240votingproject.org/pollingsite/'+ str(precinct_id) + + '/?key=' + str(api_key))
+		req = urllib.request.Request('http://people.virginia.edu/~esm7ky/precinct.json')
+        # req = urllib.request.Request('http://people.virginia.edu/~esm7ky/precinct.json')
 	except e:
 		return error("Failed to fetch voter information.")
 
@@ -232,7 +239,6 @@ def store_voter_info(precinct_id, api_key):
 	#Fetch voter information
 	resp = fetch_voter_info(precinct_id, api_key)
 
-
 	#Store voter information if it worked.
 	if resp["status"]:
 		voters = resp["data"]["voters"]
@@ -240,7 +246,7 @@ def store_voter_info(precinct_id, api_key):
 			info = voters[i]
 			info["zipcode"] = info["zip"]
 			info.pop("zip", None)
-			voter = models.Voter( **info )
+			voter = Voter( **info )
 			try:
 				voter.save()
 			except:
