@@ -41,7 +41,7 @@ After logging in with your self-made superuser...
 For Linux:
 
 1. Run: python
-2. Run: from escpos import printer
+2. Run: from escpos.printer import Usb
 3. Run: p = Usb(0x456,0x808,0,0x81,0x03)
 4. Run: p.qr("12345",size=7)
 5. Run: p.cut()
