@@ -1,10 +1,10 @@
-from django.http import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.template import loader
 from django.urls import resolve
 import urllib.request
 import json
-import logging
+import hashlib
 from web import models
 from web.models import *
 import web.forms
@@ -13,10 +13,10 @@ from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
 
 def login(request):
-    store_voter_info("0405","12345")
-
+    if request.method == "POST":
+        fetch_and_store_voter_info("0405","12345")
     if request.user.is_authenticated:
-        return registration_check(request)
+        return HttpResponseRedirect("/registration_check/")
     form = web.forms.LoginForm()
     if request.method in ["POST", "GET"]:
         return auth_views.login(request, 'login.html')
@@ -44,26 +44,23 @@ def registration_check(request):
     if request.method == "GET":
         return render(request, 'registration_check.html', {'form': form})
 
-    sample_voter = {"fn":"john", "ln": "doe", "dob": "01/01/1970"}
-
     f = web.forms.RegistrationCheck(request.POST)
     if not f.is_valid():
         return render(request, 'registration_check.html', {'form': f})
-    first_name = f.cleaned_data['firstname']
-    last_name = f.cleaned_data['lastname']
-    dob = f.cleaned_data['dob']
-    if (sample_voter["fn"] == first_name) and (sample_voter["ln"] == last_name) and (sample_voter["dob"] == dob):
-        return voter_registered(request)
-    else:
-        return voter_not_registered(request)
+    fn_entered = f.cleaned_data['firstname']
+    ln_entered = f.cleaned_data['lastname']
+    dob_entered = f.cleaned_data['dob']
 
-@login_required
-def voter_registered(request):
-    return render(request, 'voter_registered.html')
+    try:
+        db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered)
+    except:
+        return render(request, "voter_not_registered.html")
+    return voter_registered(request, fn_entered, ln_entered, dob_entered)
 
-@login_required
-def voter_not_registered(request):
-    return render(request, 'voter_not_registered.html')
+def voter_registered(request, fn, ln, dob):
+    h = hashlib.md5()
+    h.update((fn + ln + dob).encode('utf-8')) # going to need to hash the election id as well
+    return render(request, 'voter_registered.html', {'fn':fn, 'ln':ln, 'hash':h.hexdigest()})
 
 @login_required
 def create_candidate(request):
@@ -148,7 +145,7 @@ def candidates(request):
 def voters(request):
     get_voters = Voter.objects.all()
     all_the_voters = [voter.as_json() for voter in get_voters]
-    return JsonResponse({'voters': all_the_voters})
+    return JsonResponse({'count': len(all_the_voters), 'voters': all_the_voters})
 
 def election_details(request, year, month):
     get_elections = Election.objects.all()
@@ -222,7 +219,7 @@ def fetch_voter_info(precinct_id, api_key):
 
 	#Try to query the voter registration database.
 	try:
-		req = urllib.request.Request('http://people.virginia.edu/~esm7ky/precinct.json')
+		req = urllib.request.Request('http://people.virginia.edu/~esm7ky/precinct1.json')
         # req = urllib.request.Request('http://people.virginia.edu/~esm7ky/precinct.json')
 	except e:
 		return error("Failed to fetch voter information.")
@@ -235,26 +232,27 @@ def fetch_voter_info(precinct_id, api_key):
 
 
 #Store voter information in the local database.
-def store_voter_info(precinct_id, api_key):
-	#Fetch voter information
-	resp = fetch_voter_info(precinct_id, api_key)
+def fetch_and_store_voter_info(precinct_id, api_key):
+    # Remove all voters currently in database
+    Voter.objects.all().delete()
+	# Fetch voter information
+    resp = fetch_voter_info(precinct_id, api_key)
 
 	#Store voter information if it worked.
-	if resp["status"]:
-		voters = resp["data"]["voters"]
-		for i in range(len(voters)):
-			info = voters[i]
-			info["zipcode"] = info["zip"]
-			info.pop("zip", None)
-			voter = Voter( **info )
-			try:
-				voter.save()
-			except:
-				return error("Failed to save some voter information to the local database.")
-		return success()
-	else:
-		return resp
-
+    if resp["status"]:
+        voters = resp["data"]["voters"]
+        for i in range(len(voters)):
+            info = voters[i]
+            info["zipcode"] = info["zip"]
+            info.pop("zip", None)
+            voter = Voter.objects.create( **info )
+            try:
+                voter.save()
+            except:
+                return error("Failed to save some voter information to the local database.")
+        return success()
+    else:
+        return resp
 
 #Helper methods
 def error(err_msg):
