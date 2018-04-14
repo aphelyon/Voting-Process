@@ -14,6 +14,8 @@ class Voter(models.Model):
     locality = models.CharField(max_length=50)
     precinct = models.CharField(max_length=50)
     precinct_id = models.CharField(max_length=20)
+    def as_json(self):
+        return dict(first_name = self.first_name, last_name=self.last_name, voter_number=self.voter_number)
 
 
 class AnonVote(models.Model):

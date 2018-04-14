@@ -20,11 +20,9 @@ from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
-    path('', auth_views.login, {'template_name': 'login.html'}, name='login'),
+    path('', views.login, name='login'),
     path('admin/', admin.site.urls),
     path('registration_check/', views.registration_check, name='checkin'),
-    path('voter_registered/', views.voter_registered, name='registered'),
-    path('voter_not_registered/', views.voter_not_registered, name='notregistered'),
     path('login/', views.login, name='login'),
     #path('login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
     path('logout/', auth_views.logout, {'next_page': 'login'}, name='logout'),
@@ -36,6 +34,7 @@ urlpatterns = [
     path('elections/<int:year>-<int:month>/', views.election_details, name='election_details'),
     path('election_selection/', views.election_selection, name='election_selection'),
     path('candidates', views.candidates, name='candidates'),
+    path('voters', views.voters, name='voters'),
     path('instructions1', views.instructions1,name='instructions1'),
     path('instructions2', views.instructions2,name='instructions2'),
     path('overview', views.overview,name='overview'),
