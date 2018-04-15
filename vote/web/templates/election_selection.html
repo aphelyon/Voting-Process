@@ -1,14 +1,22 @@
-{% extends "control_panel.html" %}
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
+{% load static %}
 {% if user.is_superuser %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+
 {% block content %}
-<title>Election Selection</title>
-<h1 class="center"> {{ success_msg }} </h1> </br>
 <h2 class="center"> Select an Election for the voters to vote on </h2> </br>
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
-    <ul><p>Don't see the election you want to select? <a href="{% url 'create_election' %}">Add it here.</a></p></ul>
-<button type="submit">Select</button>
+<button class = "btn btn-lg btn-danger" type="submit">Select</button>
 </form>
 {% endblock %}
 {% else %}
