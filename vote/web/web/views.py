@@ -11,6 +11,8 @@ import web.forms
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
+import qrcode
+import io
 
 def login(request):
     if request.method == "POST":
@@ -60,7 +62,20 @@ def registration_check(request):
 def voter_registered(request, fn, ln, dob):
     h = hashlib.md5()
     h.update((fn + ln + dob).encode('utf-8')) # going to need to hash the election id as well
-    return render(request, 'voter_registered.html', {'fn':fn, 'ln':ln, 'hash':h.hexdigest()})
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=39,
+        border=4,
+    )        
+
+
+    img_data = qrcode.make(h.hexdigest()) #THIS RETURNS THE QR CODE AS AN IMAGE! doesn't return a template. 
+                                          #need to find a way to fix this.
+    response = HttpResponse(content_type="image/png")
+    img_data.save(response, "PNG")
+    return response       
+    #return render(request, 'voter_registered.html', {'fn':fn, 'ln':ln, 'hash':h.hexdigest()})
 
 @login_required
 def create_candidate(request):
