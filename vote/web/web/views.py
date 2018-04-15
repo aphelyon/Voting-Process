@@ -66,13 +66,14 @@ def voter_registered(request, fn, ln, dob):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=15,
+        box_size=39,
         border=4,
     )        
 
 
     img_data = qrcode.make(h.hexdigest()) #THIS RETURNS THE QR CODE AS AN IMAGE! doesn't return a template. 
                                           #need to find a way to fix this.
+    img_data = img_data.resize((128, 128))
     response = HttpResponse(content_type="image/png")
     img_data.save(response, "PNG")
     return response       
