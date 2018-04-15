@@ -1,20 +1,31 @@
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
 {% if user.is_authenticated %}
-<div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; top:20; right:20;">
-    <a href="../voter_login">Cancel</a>
-</div>
+<!--<div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; top:20; right:20;">
+    <a href="../voter_login">Cancel</a>-->
+<!--</div>-->
+<a href="../voter_login" class="btn btn-lg btn-danger" role="button" >Submit</a>
+
 <footer>
-    <div type="button" align="center" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; width:75px; position:absolute; left:50%; bottom:20">
-        <a href="../overview">Overview</a>
-    </div>
+    <!--<div type="button" align="center" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; width:75px; position:absolute; left:50%; bottom:20">-->
+
+        <!--<a href="../overview">Overview</a>
+    </div>-->
+    <a href="../overview" class="btn btn-lg btn-danger" role="button" >Logout</a>
 </footer>
 {% endif %}
 
 
 <center>
-  <img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
+  <img class="img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
 </center>
 
 {% block content %}{% endblock %}
