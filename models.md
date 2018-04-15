@@ -35,5 +35,7 @@
     
 ## Issues and changes that came from sprint 3 models
   It was just bad OO design... we had multiple candidate objects for a single candidate if they differed in positions or parties...
+  
   We solved this by adding in our Ballot Entry model, which keeps track of the position, party, and vote count. It also associates the candidate with a specific election.
   
+  We also added a navigation bar, making the process of creating an election more streamlined for the superuser.
