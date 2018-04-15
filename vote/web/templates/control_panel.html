@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel=stylesheet href="https://s3-us-west-2.amazonaws.com/colors-css/2.2.0/colors.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <!-- Add additional CSS in static file -->
+  {% load static %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+  <div class="container-fluid">
+    <div class="row">
+      {% block nav %}
+      <div class="mynav">
+          <a href="{% url 'checkin' %}">Home</a>
+          <a href="{% url  'create_election' %}">Create Election</a>
+            <a href="{% url 'create_candidate' %}">Create Candidate</a>
+        <a href="{% url 'create_ballot_entry' %}">Create Ballot Entry</a>
+         <a href="{% url 'election_selection' %}">Election Selection</a>
+          <form id="logout_form" action="{% url 'logout' %}" method="post">{% csrf_token %}</form>
+          <a id="logOut" href="javascript:{}" onclick="document.getElementById('logout_form').submit()">Log Out</a>
+      </div>
+      {% endblock %}
+      <div class = "panel panel-default container" >
+        <div class = "panel-body">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    </div>
+  </div>
+</body>
+
+</html>

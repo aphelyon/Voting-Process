@@ -18,6 +18,9 @@ from django.urls import path
 from web import views
 from django.contrib.auth import views as auth_views
 
+#for the control panel, there is no URL to it; that's on purpose, instead you're going to search one of the pages on the control panel,
+#such as create election, create candidate, create ballot entry, etc. because those are all extensions of the control panel
+
 
 urlpatterns = [
     path('', views.login, name='login'),
@@ -29,9 +32,10 @@ urlpatterns = [
     path('voter_login/', views.voter_login, name='voter_login'),
     path('create_candidate', views.create_candidate, name='create_candidate'),
     path('create_election', views.create_election, name='create_election'),
-    path('add_candidate', views.add_candidate, name='add_candidate'),
+    path('create_ballot_entry', views.create_ballot_entry, name='create_ballot_entry'),
     path('elections', views.elections, name='elections'),
     path('elections/<int:year>-<int:month>/', views.election_details, name='election_details'),
+    path('candidates/<first_name>-<last_name>-<int:year>/', views.candidate_details, name='candidate_details'),
     path('election_selection/', views.election_selection, name='election_selection'),
     path('candidates', views.candidates, name='candidates'),
     path('voters', views.voters, name='voters'),
@@ -39,5 +43,5 @@ urlpatterns = [
     path('instructions2', views.instructions2,name='instructions2'),
     path('overview', views.overview,name='overview'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
-    path('vote', views.vote,name='vote'),
+    path('vote', views.vote,name='vote')
 ]

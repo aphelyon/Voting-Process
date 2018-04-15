@@ -1,0 +1,55 @@
+/*.nav {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+    position: inline;
+}*/
+.mynav {
+    /*background-color: #000099;*/
+    background-color: #85144b;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.mynav a {
+    float: left;
+    display: block;
+    color: #ffffff;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.mynav a:hover {
+    background-color: #F012BE;
+    color: black;
+}
+
+#logOut {
+  float: right;
+}
+
+
+select {
+  width: 300px;
+}
+
+#listTable {
+  margin: auto;
+}
+
+p {
+  word-wrap: break-word !important;
+}
+
+ul li ul li{
+    font-size: smaller;
+    list-style-type: none;
+}
+
+.errorlist
+    {
+        color: red;
+    }

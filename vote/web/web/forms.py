@@ -24,7 +24,7 @@ class CandidateForm(forms.Form):
 
 class ElectionForm(forms.Form):
     election_ID = forms.DateField(label="Election Date", input_formats=['%Y-%m'])
-    election = (('Primary', 'Primary'), ('General', 'General'), ('Referendum', 'Referendum'))
+    election = (('General', 'General'), ('Primary', 'Primary'), ('Referendum', 'Referendum'))
     election_type = forms.CharField(label='Type of Election', widget=forms.Select(choices=election))
 
 class AddForm(forms.Form):
@@ -35,9 +35,10 @@ class AddForm(forms.Form):
         all_the_candidates = [candidate.as_json() for candidate in get_candidates]
         for candidate in all_the_candidates:
             pk = candidate['pk']
-            candidates = candidate['first_name'] + " " + candidate['last_name']
+            candidates = candidate['first_name'] + " " + candidate['last_name'] + " " + str(candidate['dob'].year)
             tuple = (pk, candidates)
             candidate_items.append(tuple)
+        candidate_items.sort(key=lambda candidate: candidate[1])
         self.fields['candidate'] = forms.Field(widget=forms.Select(choices=candidate_items))
         election_items = []
         get_election = Election.objects.all()
@@ -47,7 +48,10 @@ class AddForm(forms.Form):
             elections = election['election_id']
             tuple = (pk, elections)
             election_items.append(tuple)
+        election_items.sort(key=lambda election: election[1])
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
+        self.fields['position'] = forms.CharField(max_length=100, label="Position")
+        self.fields['party'] = forms.CharField(max_length=100, label="Party")
 
 class ElectionSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -60,19 +64,22 @@ class ElectionSelectionForm(forms.Form):
             elections = election['election_id']
             tuple = (pk, elections)
             election_items.append(tuple)
+        election_items.sort(key=lambda election: election[1])
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
 
 class VoteForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.positions = kwargs.pop('positions')
-        self.candidates = kwargs.pop('candidates')
+        self.ballot_entries = kwargs.pop('ballot_entries')
         super(VoteForm, self).__init__(*args, **kwargs)
         for position in self.positions:
-            candidate_items = []
-            for candidate in self.candidates:
-                if position == candidate.position:
-                    pk = candidate.pk
-                    candid = candidate.first_name + " " + candidate.last_name
+            ballot_entry_items = []
+            for ballot_entry in self.ballot_entries:
+                if position == ballot_entry.position:
+                    pk = ballot_entry.candidate_id
+                    c = Candidate.objects.get(pk=pk)
+                    candid = c.first_name + " " + c.last_name
                     tuple = (pk, candid)
-                    candidate_items.append(tuple)
-            self.fields[position] = forms.CharField(widget=forms.RadioSelect(choices=candidate_items))
+                    ballot_entry_items.append(tuple)
+            ballot_entry_items.sort(key=lambda candidate: candidate[1])
+            self.fields[position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
