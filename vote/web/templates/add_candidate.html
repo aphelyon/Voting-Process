@@ -9,11 +9,14 @@
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Bootstrap imports -->
 
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-
 <!--<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
 -->
 {% block content %}
+{% if ok %}
+   <h1 class="center" id="green"> {{ success_msg }} </h1> </br>
+    {% else %}
+    <h2 class="center" id="red"> {{ error_msg }} </h2> </br>
+    {% endif %}
 <h2 class="center"> Add a Candidate to an Election </h2> </br>
 <form method="post" class="center">
 {% csrf_token %}

@@ -31,6 +31,13 @@
   float: right;
 }
 
+#green {
+color: green;
+}
+
+#red {
+color: red;
+}
 
 select {
   width: 300px;

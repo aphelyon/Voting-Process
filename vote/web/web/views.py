@@ -100,7 +100,7 @@ def create_candidate(request):
         response = {'ok': False, 'error_msg': "Candidate already exists", 'form': form}
         return render(request, 'create_candidate.html', response)
     new_candidate = Candidate.objects.create(first_name=first_name, last_name=last_name, dob=dob)
-    response = {'ok': False, 'error_msg': "Candidate was successfully created", 'form': form, 'candidate': new_candidate.as_json()}
+    response = {'ok': True, 'success_msg': "Candidate was successfully created", 'form': form, 'candidate': new_candidate.as_json()}
     return render(request, 'create_candidate.html', response)
 
 @login_required
@@ -115,15 +115,25 @@ def create_election(request):
         return render(request, 'create_election.html', {'form': f})
     election_ID = f.cleaned_data['election_ID']
     electType = f.cleaned_data['election_type']
+    get_elections = Election.objects.all()
+    all_the_elections = [election.as_json() for election in get_elections]
     month = election_ID.month
     year = election_ID.year
+    failure = False
     if month < 10:
         electionID = "" + str(year) + "-0" + str(month)
     else:
         electionID = "" + str(year) + "-" + str(month)
+    for election in all_the_elections:
+        if electionID == election['election_id']:
+            failure = True
+    if failure:
+        response = {'ok': False, 'error_msg': "Election already exists", 'form': form}
+        return render(request, 'create_election.html', response)
     new_election = Election.objects.create(election_id=electionID, election_type=electType)
-    response = {"Status": "200", "Election": new_election.as_json()}
-    return JsonResponse({'ok': True, 'results': response})
+    response = {'ok': True, 'success_msg': "Election was successfully created", 'form': form,
+                'election': new_election.as_json()}
+    return render(request, 'create_election.html', response)
 
 @login_required
 def create_ballot_entry(request):
