@@ -5,12 +5,13 @@
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Bootstrap imports -->
 
+{% extends "control_panel.html" %}
 {% load static %}
 {% if user.is_superuser %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
-<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
-
+<!--<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+-->
 {% block content %}
 <h2 class="center"> Select an Election for the voters to vote on </h2> </br>
 <form method="post" class="center">

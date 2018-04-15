@@ -1,3 +1,4 @@
+{% extends "control_panel.html" %}
 {% load static %}
 {% if user.is_superuser %}
 
@@ -10,8 +11,8 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
-<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
-
+<!--<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+-->
 {% block content %}
 <h2 class="center"> Add a Candidate to an Election </h2> </br>
 <form method="post" class="center">
