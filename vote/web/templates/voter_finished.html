@@ -1,3 +1,10 @@
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
 {% extends "voting_base.html" %}
 
 {% load static %}
@@ -7,9 +14,10 @@
 <h2 class="center" style="font-size:32px"> Thanks for voting! </h2> <br><br>
 <center><p>Please see a poll-worker at the exit station if you would like to confirm your vote.</p></center>
 <br><br>
-<div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; left:50%">
+<!--<div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; left:50%">
         <a href="../voter_login">DONE</a>
-</div>
+</div>-->
+<a href="../voter_login" class="btn btn-danger" role="button" >DONE</a>
 
 
 {% endblock %}

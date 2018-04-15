@@ -1,15 +1,23 @@
 {% load static %}
 {% if user.is_superuser %}
+
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
-<img src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
 
 {% block content %}
 <h2 class="center"> Add a Candidate to an Election </h2> </br>
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
-<button type="submit">Add Candidate</button>
+<button class="btn btn-lg btn-danger" type="submit">Add Candidate</button>
 </form>
 {% endblock %}
 {% else %}
