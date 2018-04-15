@@ -80,4 +80,4 @@ class VoteForm(forms.Form):
                     tuple = (pk, candid)
                     ballot_entry_items.append(tuple)
             ballot_entry_items.sort(key=lambda candidate: candidate[1])
-            self.fields[position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
+            self.fields[position] = forms.ChoiceField(widget=forms.RadioSelect(), choices=ballot_entry_items)

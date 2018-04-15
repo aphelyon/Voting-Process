@@ -12,7 +12,7 @@
 <div class= "well">
 <form method="post" class="center">
 {% csrf_token %}
-{{ form }}
+{{ form.as_p }}
 <button class = "btn btn-lg btn-danger" type="submit">Submit</button>
 </form>
 {% endblock %}
