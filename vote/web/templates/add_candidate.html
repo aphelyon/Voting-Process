@@ -1,38 +1,23 @@
-{% extends "control_panel.html" %}
+{% load static %}
 {% if user.is_superuser %}
+
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
+
 {% block content %}
-<title>Ballot Entry Creation</title>
- {% if ok %}
-   <h1 class="center"> {{ success_msg }} </h1> </br>
-    {% else %}
-    <h1 class="center"> {{ error_msg }} </h1> </br>
-    {% endif %}
 <h2 class="center"> Add a Candidate to an Election </h2> </br>
 <form method="post" class="center">
 {% csrf_token %}
-<div class="fieldWrapper">
-    {{ form.candidate.errors }}
-    <label for="{{ form.candidate.id_for_label }}">Candidate:</label>
-    {{ form.candidate }}
-    <ul><p>Don't see the candidate you want to select? <a href="{% url 'create_candidate' %}">Add them here.</a></p></ul>
-</div>
-<div class="fieldWrapper">
-    {{ form.election.errors }}
-    <label for="{{ form.election.id_for_label }}">Election:</label>
-    {{ form.election }}
-    <ul><p>Don't see the election you want to select? <a href="{% url 'create_election' %}">Add it here.</a></p></ul>
-</div>
-<div class="fieldWrapper">
-    {{ form.position.errors }}
-    <label for="{{ form.position.id_for_label }}">Position:</label>
-    {{ form.position }}
-</div>
-<div class="fieldWrapper">
-    {{ form.party.errors }}
-    <label for="{{ form.party.id_for_label }}">Party</label>
-    {{ form.party }}
-</div>
-<button type="submit">Add Candidate</button>
+{{ form.as_p }}
+<button class="btn btn-lg btn-danger" type="submit">Add Candidate</button>
 </form>
 {% endblock %}
 {% else %}
