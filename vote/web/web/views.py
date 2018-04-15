@@ -66,7 +66,7 @@ def voter_registered(request, fn, ln, dob):
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=39,
+        box_size=15,
         border=4,
     )        
 
