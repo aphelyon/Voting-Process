@@ -1,7 +1,8 @@
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template import loader
-from django.urls import resolve
+from django.template.response import TemplateResponse
+from django.urls import resolve, reverse
 import urllib.request
 import json
 import hashlib
@@ -13,7 +14,6 @@ from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
 import qrcode
 import io
-
 
 def login(request):
     if request.method == "POST":
@@ -29,17 +29,50 @@ def voter_login(request):
     if request.method == "GET":
         return render(request, 'voter_login.html', {'form':form})
 
+    f = web.forms.VoterLoginForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'voter_login.html', {'form': f})
+    qr_entered = f.cleaned_data['QRHash']
+    fn_entered = f.cleaned_data['firstname']
+    ln_entered = f.cleaned_data['lastname']
+    addr_entered = f.cleaned_data['addr']
+
+    h = hashlib.md5()
+    h.update((fn_entered + ln_entered + addr_entered).encode('utf-8')) # going to need to hash the election id as well
+    cur_hash = h.hexdigest()
+    if cur_hash == qr_entered:
+        request.session['auth'] = True
+        nex = reverse('instructions1')
+        response = HttpResponseRedirect(nex)
+        return response
+    else:
+        request.session['auth'] = False
+        nex = reverse('voter_login')
+        response = HttpResponseRedirect(nex)
+        return response
+
+# This is a decorator definition to make sure that voters can only access
+# voting-process-associated pages once they've been successfully authorized
+def voter_auth(f):
+    def wrap(request, *args, **kwargs):
+        if "auth" in request.session and request.session["auth"]:
+            return f(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect('voter_login')
+    return wrap
+
+@voter_auth
 def instructions1(request):
     return render(request,'instructions1.html')
 
+@voter_auth
 def instructions2(request):
     return render(request,'instructions2.html')
 
-def overview(request):
-    return render(request,'overview.html')
-
+@voter_auth
 def voter_finished(request):
-    return render(request,'voter_finished.html')
+    request.session["auth"] = False
+    return render(request, "voter_finished.html")
 
 @login_required
 def registration_check(request):
@@ -52,31 +85,30 @@ def registration_check(request):
         return render(request, 'registration_check.html', {'form': f})
     fn_entered = f.cleaned_data['firstname']
     ln_entered = f.cleaned_data['lastname']
-    dob_entered = f.cleaned_data['dob']
+    addr_entered = f.cleaned_data['addr']
 
     try:
-        db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered)
+        db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered, street_address=addr_entered)
     except:
         return render(request, "voter_not_registered.html")
-    return voter_registered(request, fn_entered, ln_entered, dob_entered)
+    return voter_registered(request, fn_entered, ln_entered, addr_entered)
 
-def voter_registered(request, fn, ln, dob):
+def voter_registered(request, fn, ln, addr):
     h = hashlib.md5()
-    h.update((fn + ln + dob).encode('utf-8')) # going to need to hash the election id as well
+    h.update((fn + ln + addr).encode('utf-8')) # going to need to hash the election id as well
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
         box_size=39,
         border=4,
-    )        
+    )
 
-
-    img_data = qrcode.make(h.hexdigest()) #THIS RETURNS THE QR CODE AS AN IMAGE! doesn't return a template. 
+    img_data = qrcode.make(h.hexdigest()) #THIS RETURNS THE QR CODE AS AN IMAGE! doesn't return a template.
                                           #need to find a way to fix this.
     img_data = img_data.resize((128, 128))
     response = HttpResponse(content_type="image/png")
     img_data.save(response, "PNG")
-    return response       
+    return response
     #return render(request, 'voter_registered.html', {'fn':fn, 'ln':ln, 'hash':h.hexdigest()})
 
 @login_required
@@ -249,18 +281,19 @@ def election_selection(request):
     request.session['election'] = election
     return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election})
 
+@voter_auth
 def vote(request):
     if 'election' in request.session:
         election = request.session['election']
     elect = Election.objects.get(election_id=election)
     positions = []
     ballot_entries = []
-    #filling positions and ballot_entries arrays 
+    #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
         ballot_entries.append(ballot_entry)
         if ballot_entry.position not in positions:
             positions.append(ballot_entry.position)
-    
+
     voted_ballot_entries = []
 
     #set pos based on session variable
@@ -276,15 +309,15 @@ def vote(request):
         #form_positions will hold one position
         form_positions = []
         form_positions.append(positions[pos])
-        #access the VoteForm       
+        #access the VoteForm
         form = web.forms.VoteForm(ballot_entries=ballot_entries, form_positions=form_positions)
         if request.method == "GET":
             return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition})
         f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_positions=form_positions)
         if not f.is_valid():
             return render(request, 'vote.html', {'form': f})
-            
-            
+
+
         #normally loops through all positions but only has one position now
         #for position in positions:
         candidate_pk = f.cleaned_data[positions[pos]]
@@ -294,8 +327,8 @@ def vote(request):
                 ballot_entry.save()
                 candidate = Candidate.objects.get(pk=candidate_pk)
                 voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
-    
-    
+
+
 
     if 'next' in request.POST:
         request.session['position'] = pos+1
@@ -304,14 +337,14 @@ def vote(request):
 
     #if there are more positions to iterate through, will send to another vote page
     #if there are no more positions to iterate through, will send the json response
-    
+
     #reset the position
     request.session['position'] = 0
-    
+
     #response = {"Status": "200", 'candidates': voted_ballot_entries}
     #return JsonResponse({'ok': True, 'results': response})
 
-    return render(request, 'voter_finished.html')
+    return voter_finished(request)
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):

@@ -27,7 +27,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('registration_check/', views.registration_check, name='checkin'),
     path('login/', views.login, name='login'),
-    #path('login/', auth_views.login, {'template_name': 'login.html'}, name='login'),
     path('logout/', auth_views.logout, {'next_page': 'login'}, name='logout'),
     path('voter_login/', views.voter_login, name='voter_login'),
     path('create_candidate', views.create_candidate, name='create_candidate'),
@@ -41,7 +40,6 @@ urlpatterns = [
     path('voters', views.voters, name='voters'),
     path('instructions1', views.instructions1,name='instructions1'),
     path('instructions2', views.instructions2,name='instructions2'),
-    path('overview', views.overview,name='overview'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
     path('vote', views.vote,name='vote')
 ]
