@@ -40,7 +40,6 @@ urlpatterns = [
     path('voters', views.voters, name='voters'),
     path('instructions1', views.instructions1,name='instructions1'),
     path('instructions2', views.instructions2,name='instructions2'),
-    path('overview', views.overview,name='overview'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
     path('vote', views.vote,name='vote')
 ]
