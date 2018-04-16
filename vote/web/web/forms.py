@@ -69,10 +69,10 @@ class ElectionSelectionForm(forms.Form):
 
 class VoteForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        self.positions = kwargs.pop('positions')
+        self.form_positions = kwargs.pop('form_positions')
         self.ballot_entries = kwargs.pop('ballot_entries')
         super(VoteForm, self).__init__(*args, **kwargs)
-        for position in self.positions:
+        for position in self.form_positions:
             ballot_entry_items = []
             for ballot_entry in self.ballot_entries:
                 if position == ballot_entry.position:
@@ -82,4 +82,4 @@ class VoteForm(forms.Form):
                     tuple = (pk, candid)
                     ballot_entry_items.append(tuple)
             ballot_entry_items.sort(key=lambda candidate: candidate[1])
-            self.fields[position] = forms.ChoiceField(widget=forms.RadioSelect(), choices=ballot_entry_items)
+            self.fields[position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))

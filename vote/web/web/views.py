@@ -294,27 +294,63 @@ def vote(request):
     elect = Election.objects.get(election_id=election)
     positions = []
     ballot_entries = []
+    #filling positions and ballot_entries arrays 
     for ballot_entry in elect.ballotEntries.all():
         ballot_entries.append(ballot_entry)
         if ballot_entry.position not in positions:
             positions.append(ballot_entry.position)
-    form = web.forms.VoteForm(ballot_entries=ballot_entries, positions=positions)
-    if request.method == "GET":
-        return render(request, 'vote.html', {'form': form})
-    f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, positions=positions)
-    if not f.is_valid():
-        return render(request, 'vote.html', {'form': f})
+    
     voted_ballot_entries = []
-    for position in positions:
-        candidate_pk = f.cleaned_data[position]
+
+    #set pos based on session variable
+    if 'position' in request.session:
+        pos =  request.session['position']
+    else:
+        pos = 0
+
+    #loop through all the positions
+    maxPosition = len(positions) - 1
+    #if there is a position at this index pos
+    if pos <= maxPosition:
+        #form_positions will hold one position
+        form_positions = []
+        form_positions.append(positions[pos])
+        #access the VoteForm       
+        form = web.forms.VoteForm(ballot_entries=ballot_entries, form_positions=form_positions)
+        if request.method == "GET":
+            return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition})
+        f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_positions=form_positions)
+        if not f.is_valid():
+            return render(request, 'vote.html', {'form': f})
+            
+            
+        #normally loops through all positions but only has one position now
+        #for position in positions:
+        candidate_pk = f.cleaned_data[positions[pos]]
         for ballot_entry in elect.ballotEntries.all():
-            if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
+            if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == positions[pos]:
                 ballot_entry.num_votes += 1
                 ballot_entry.save()
                 candidate = Candidate.objects.get(pk=candidate_pk)
                 voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
-    response = {"Status": "200", 'candidates': voted_ballot_entries}
-    return JsonResponse({'ok': True, 'results': response})
+    
+    
+
+    if 'next' in request.POST:
+        request.session['position'] = pos+1
+        return redirect('vote')
+
+
+    #if there are more positions to iterate through, will send to another vote page
+    #if there are no more positions to iterate through, will send the json response
+    
+    #reset the position
+    request.session['position'] = 0
+    
+    #response = {"Status": "200", 'candidates': voted_ballot_entries}
+    #return JsonResponse({'ok': True, 'results': response})
+
+    return render(request, 'voter_finished.html')
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):
