@@ -5,10 +5,12 @@
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Bootstrap imports -->
 
-{% extends "voting_base.html" %}
-
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
+<center>
+  <img class="img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
+</center>
 {% block content %}
 <h2 class="center"> Voter Login</h2> </br>
 <form method="post" class="center">

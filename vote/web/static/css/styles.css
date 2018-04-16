@@ -6,7 +6,7 @@
 }*/
 .mynav {
     /*background-color: #000099;*/
-    background-color: #85144b;
+    background-color:  	#d9534f;
     overflow: hidden;
 }
 
@@ -23,7 +23,7 @@
 
 /* Change the color of links on hover */
 .mynav a:hover {
-    background-color: #F012BE;
+    background-color: #960018;
     color: black;
 }
 
@@ -31,6 +31,13 @@
   float: right;
 }
 
+#green {
+color: green;
+}
+
+#red {
+color: red;
+}
 
 select {
   width: 300px;
