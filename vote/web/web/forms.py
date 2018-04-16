@@ -7,13 +7,15 @@ class LoginForm(forms.Form):
     password = forms.CharField(max_length=256, widget=forms.PasswordInput())
 
 class VoterLoginForm(forms.Form):
-    QRCode = forms.CharField(max_length=16, label = "Scan QR Code")
-    dob = forms.CharField(max_length = 20, label = "Date of Birth")
+    QRHash = forms.CharField(max_length=100, label = "Scan QR Code")
+    firstname = forms.CharField(max_length = 100, label = "First Name")
+    lastname = forms.CharField(max_length = 100, label = "Last Name")
+    addr = forms.CharField(label = "Street Address")
 
 class RegistrationCheck(forms.Form):
     firstname = forms.CharField(max_length = 100, label = "First Name")
     lastname = forms.CharField(max_length = 100, label = "Last Name")
-    dob = forms.CharField(label = "Date of Birth")
+    addr = forms.CharField(label = "Street Address")
 
 class CandidateForm(forms.Form):
     firstname = forms.CharField(max_length=100, label="First Name")
