@@ -15,7 +15,6 @@ from django.forms.models import model_to_dict
 import qrcode
 import io
 
-
 def login(request):
     if request.method == "POST":
         fetch_and_store_voter_info("0405","12345")
@@ -42,14 +41,14 @@ def voter_login(request):
     h.update((fn_entered + ln_entered + addr_entered).encode('utf-8')) # going to need to hash the election id as well
     cur_hash = h.hexdigest()
     if cur_hash == qr_entered:
+        request.session['auth'] = True
         nex = reverse('instructions1')
         response = HttpResponseRedirect(nex)
-        response.session['auth'] = True
         return response
     else:
+        request.session['auth'] = False
         nex = reverse('voter_login')
         response = HttpResponseRedirect(nex)
-        response.session['auth'] = False
         return response
 
 # This is a decorator definition to make sure that voters can only access
@@ -71,14 +70,9 @@ def instructions2(request):
     return render(request,'instructions2.html')
 
 @voter_auth
-def overview(request):
-    return render(request,'overview.html')
-
-@voter_auth
 def voter_finished(request):
-    t = TemplateResponse(request, "voter_finished.html", {})
-    t.set_cookie("auth", False)
-    return t
+    request.session["auth"] = False
+    return render(request, "voter_finished.html")
 
 @login_required
 def registration_check(request):
@@ -294,12 +288,12 @@ def vote(request):
     elect = Election.objects.get(election_id=election)
     positions = []
     ballot_entries = []
-    #filling positions and ballot_entries arrays 
+    #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
         ballot_entries.append(ballot_entry)
         if ballot_entry.position not in positions:
             positions.append(ballot_entry.position)
-    
+
     voted_ballot_entries = []
 
     #set pos based on session variable
@@ -315,15 +309,15 @@ def vote(request):
         #form_positions will hold one position
         form_positions = []
         form_positions.append(positions[pos])
-        #access the VoteForm       
+        #access the VoteForm
         form = web.forms.VoteForm(ballot_entries=ballot_entries, form_positions=form_positions)
         if request.method == "GET":
             return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition})
         f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_positions=form_positions)
         if not f.is_valid():
             return render(request, 'vote.html', {'form': f})
-            
-            
+
+
         #normally loops through all positions but only has one position now
         #for position in positions:
         candidate_pk = f.cleaned_data[positions[pos]]
@@ -333,8 +327,8 @@ def vote(request):
                 ballot_entry.save()
                 candidate = Candidate.objects.get(pk=candidate_pk)
                 voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
-    
-    
+
+
 
     if 'next' in request.POST:
         request.session['position'] = pos+1
@@ -343,14 +337,14 @@ def vote(request):
 
     #if there are more positions to iterate through, will send to another vote page
     #if there are no more positions to iterate through, will send the json response
-    
+
     #reset the position
     request.session['position'] = 0
-    
+
     #response = {"Status": "200", 'candidates': voted_ballot_entries}
     #return JsonResponse({'ok': True, 'results': response})
 
-    return render(request, 'voter_finished.html')
+    return voter_finished(request)
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):
