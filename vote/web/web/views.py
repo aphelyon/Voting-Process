@@ -289,7 +289,7 @@ def vote(request):
         #for position in positions:
         candidate_pk = f.cleaned_data[positions[pos]]
         for ballot_entry in elect.ballotEntries.all():
-            if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
+            if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == positions[pos]:
                 ballot_entry.num_votes += 1
                 ballot_entry.save()
                 candidate = Candidate.objects.get(pk=candidate_pk)
