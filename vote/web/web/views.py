@@ -58,7 +58,7 @@ def voter_auth(f):
         if "auth" in request.session and request.session["auth"]:
             return f(request, *args, **kwargs)
         else:
-            return HttpResponseRedirect('voter_login')
+            return HttpResponseRedirect('../voter_login')
     return wrap
 
 @voter_auth
@@ -279,10 +279,10 @@ def election_selection(request):
         return render(request, 'election_selection.html', {'form': f})
     election = f.cleaned_data['election']
     request.session['election'] = election
-    return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election})
+    return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True})
 
 @voter_auth
-def vote(request):
+def vote(request, pos_num):
     if 'election' in request.session:
         election = request.session['election']
     elect = Election.objects.get(election_id=election)
@@ -294,57 +294,54 @@ def vote(request):
         if ballot_entry.position not in positions:
             positions.append(ballot_entry.position)
 
+    position = positions[pos_num]
+    maxPosition = len(positions) - 1
+
+    if pos_num == 0:
+        submission_data = {}
+        request.session['submission'] = submission_data
+
+    first_position = True
+    if pos_num != 0:
+        first_position = False
+        submission_data = request.session['submission']
+
+    last = False
+    if pos_num == maxPosition:
+        last = True
+
+    form = web.forms.VoteForm(ballot_entries=ballot_entries, form_position=position)
+    if request.method == "GET":
+        return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
+    f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_position=position)
+    if not f.is_valid():
+        return render(request, 'vote.html', {'form': f,  'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
+
+
     voted_ballot_entries = []
 
-    #set pos based on session variable
-    if 'position' in request.session:
-        pos =  request.session['position']
-    else:
-        pos = 0
-
-    #loop through all the positions
-    maxPosition = len(positions) - 1
-    #if there is a position at this index pos
-    if pos <= maxPosition:
-        #form_positions will hold one position
-        form_positions = []
-        form_positions.append(positions[pos])
-        #access the VoteForm
-        form = web.forms.VoteForm(ballot_entries=ballot_entries, form_positions=form_positions)
-        if request.method == "GET":
-            return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition})
-        f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_positions=form_positions)
-        if not f.is_valid():
-            return render(request, 'vote.html', {'form': f})
-
-
-        #normally loops through all positions but only has one position now
-        #for position in positions:
-        candidate_pk = f.cleaned_data[positions[pos]]
-        for ballot_entry in elect.ballotEntries.all():
-            if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == positions[pos]:
-                ballot_entry.num_votes += 1
-                ballot_entry.save()
-                candidate = Candidate.objects.get(pk=candidate_pk)
-                voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
-
-
-
     if 'next' in request.POST:
-        request.session['position'] = pos+1
-        return redirect('vote')
+        submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
+        request.session['submission'] = submission_data
+        return redirect('../vote/' + str(pos_num + 1))
+    if 'previous' in request.POST:
+        submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
+        request.session['submission'] = submission_data
+        return redirect('../vote/' + str(pos_num - 1))
 
-
-    #if there are more positions to iterate through, will send to another vote page
-    #if there are no more positions to iterate through, will send the json response
-
-    #reset the position
-    request.session['position'] = 0
-
-    #response = {"Status": "200", 'candidates': voted_ballot_entries}
-    #return JsonResponse({'ok': True, 'results': response})
-
-    return voter_finished(request)
+    if 'submit' in request.POST:
+        submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
+        count = 0
+        for position in positions:
+            candidate_pk = submission_data[str(count)]
+            for ballot_entry in elect.ballotEntries.all():
+                if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
+                    ballot_entry.num_votes += 1
+                    ballot_entry.save()
+                    candidate = Candidate.objects.get(pk=candidate_pk)
+                    voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
+            count += 1
+        return render(request, 'voter_finished.html')
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):
