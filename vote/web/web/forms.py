@@ -70,17 +70,17 @@ class ElectionSelectionForm(forms.Form):
 
 class VoteForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        self.form_positions = kwargs.pop('form_positions')
+        self.form_position = kwargs.pop('form_position')
         self.ballot_entries = kwargs.pop('ballot_entries')
         super(VoteForm, self).__init__(*args, **kwargs)
-        for position in self.form_positions:
-            ballot_entry_items = []
-            for ballot_entry in self.ballot_entries:
-                if position == ballot_entry.position:
-                    pk = ballot_entry.candidate_id
-                    c = Candidate.objects.get(pk=pk)
-                    candid = c.first_name + " " + c.last_name
-                    tuple = (pk, candid)
-                    ballot_entry_items.append(tuple)
-            ballot_entry_items.sort(key=lambda candidate: candidate[1])
-            self.fields[position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
+        ballot_entry_items = []
+        for ballot_entry in self.ballot_entries:
+            if self.form_position == ballot_entry.position:
+                pk = ballot_entry.candidate_id
+                c = Candidate.objects.get(pk=pk)
+                candid = c.first_name + " " + c.last_name
+                tuple = (pk, candid)
+                ballot_entry_items.append(tuple)
+        ballot_entry_items.sort(key=lambda candidate: candidate[1])
+        self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
+        self.initial[self.form_position] = ballot_entry_items[0]
