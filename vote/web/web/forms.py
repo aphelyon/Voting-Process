@@ -83,3 +83,6 @@ class VoteForm(forms.Form):
         ballot_entry_items.sort(key=lambda candidate: candidate[1])
         self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
         self.initial[self.form_position] = ballot_entry_items[0]
+
+class MediaForm(forms.Form):
+    company_name = forms.CharField(max_length=100, label="Company name")

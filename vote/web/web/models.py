@@ -46,3 +46,9 @@ class Election(models.Model):
     ballotEntries = models.ManyToManyField(BallotEntry)
     def as_json(self):
         return dict(election_id = self.election_id, election_type=self.election_type, pk=self.pk)
+
+class MediaID(models.Model):
+    api_key = models.CharField(max_length = 100, primary_key = True)
+    company_name = models.CharField(max_length = 100)
+    def as_json(self):
+        return dict(company = company_name, key = api_key)    
