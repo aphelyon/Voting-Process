@@ -10,7 +10,7 @@
 
 {% if user.is_authenticated %}
 <footer>
-    <a href="../instructions2" class="btn btn-danger" role="button" >Cancel</a>
+    <a href="../instructions2" class="spacer btn btn-danger pull-right" role="button" >Cancel</a>
 </footer>
 {% endif %}
 
@@ -19,4 +19,7 @@
   <img class="img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
 </center>
 
+
+
 {% block content %}{% endblock %}
+
