@@ -5,3 +5,9 @@ div.div2 {color: white; font-family: arial; font-size: 18px; font-weight: bold; 
 .logout{position:absolute; top:20; right:20;}
 .center{text-align: center; margin:0 auto;}
 body { background-color : #f5f5f5;}
+.spacer {
+margin-left: 10px;
+margin-top: 10px;
+margin-right: 10px;
+}
+

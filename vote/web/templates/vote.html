@@ -7,26 +7,24 @@
 
 {% extends "base.html" %}
 {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 {% block content %}
 <h2 class="center"> Vote </h2> </br>
-<div class= "well">
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
 {% if first %}
-    <button type="submit" name="next">Next</button>
+    <button class = "btn btn-lg btn-danger pull-right" type="submit" name="next">Next</button>
 {% else %}
     {% if not last %}
-        <button type="submit" name="previous">Previous</button>
-        <button type="submit" name="next">Next</button>
+        <button class = "btn btn-lg btn-danger pull-left"  type="submit" name="previous">Previous</button>
+        <button class = "btn btn-lg btn-danger pull-right"type="submit" name="next">Next</button>
     {% else %}
-        <button type="submit" name="previous">Previous</button>
-        <button type="submit" name="submit">Submit</button>
+        <button class = "btn btn-lg btn-danger pull-left" type="submit" name="previous">Previous</button>
+        <button class = "btn btn-lg btn-danger pull-right" type="submit" name="submit">Submit</button>
     {% endif %}
 {% endif %}
 
-
-<a href="../instructions2" class="btn btn-lg btn-danger pull-left" role="button" >Back to Instructions</a>
+<!--<a href="../instructions2" class="btn btn-lg btn-danger pull-left" role="button" >Back</a>-->
 </form>
 {% endblock %}
-</div>
