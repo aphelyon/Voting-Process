@@ -42,6 +42,11 @@
     <label for="{{ form.party.id_for_label }}">Party</label>
     {{ form.party }}
 </div>
+<div class="fieldWrapper">
+    {{ form.precinct_id.errors }}
+    <label for="{{ form.precinct_id.id_for_label }}">Precinct ID</label>
+    {{ form.precinct_id }}
+</div>
 <button class="btn btn-lg btn-danger" type="submit">Add Candidate</button>
 </form>
 {% endblock %}

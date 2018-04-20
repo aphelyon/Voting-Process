@@ -29,8 +29,9 @@ class BallotEntry(models.Model):
     num_votes = models.IntegerField()
     candidate_id = models.IntegerField()
     election_id = models.CharField(max_length=100)
+    precinct_id = models.CharField(max_length=15)
     def as_json(self):
-        return dict(party=self.party, position=self.position, num_votes=self.num_votes, pk=self.pk, candidate_id=self.candidate_id, election_id=self.election_id)
+        return dict(party=self.party, position=self.position, num_votes=self.num_votes, pk=self.pk, candidate_id=self.candidate_id, election_id=self.election_id, precinct_id=self.precinct_id)
 
 class Candidate(models.Model):
     first_name = models.CharField(max_length=100)

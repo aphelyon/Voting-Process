@@ -181,17 +181,18 @@ def create_ballot_entry(request):
     party = f.cleaned_data['party']
     election = f.cleaned_data['election']
     candidate = f.cleaned_data['candidate']
+    precinct_id = f.cleaned_data['precinct_id']
     num_votes = 0
     get_ballot_entries = BallotEntry.objects.all()
     ballot = [ballot_entry.as_json() for ballot_entry in get_ballot_entries]
     failure = False
     for ballot_entry in ballot:
-        if position == ballot_entry['position'] and party == ballot_entry['party'] and election == ballot_entry['election_id'] and candidate == str(ballot_entry['candidate_id']):
+        if position == ballot_entry['position'] and party == ballot_entry['party'] and election == ballot_entry['election_id'] and candidate == str(ballot_entry['candidate_id']) and precinct_id == ballot_entry['precinct_id']:
             failure = True
     if failure:
         response = {'ok': False, 'error_msg': "Ballot entry already exists", 'form': form}
         return render(request, 'add_candidate.html', response)
-    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position)
+    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position, precinct_id=precinct_id)
     e = Election.objects.get(pk=election)
     c = Candidate.objects.get(pk=candidate)
     e.ballotEntries.add(new_ballot_entry)

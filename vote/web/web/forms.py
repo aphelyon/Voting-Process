@@ -52,6 +52,7 @@ class AddForm(forms.Form):
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
         self.fields['position'] = forms.CharField(max_length=100, label="Position")
         self.fields['party'] = forms.CharField(max_length=100, label="Party")
+        self.fields['precinct_id'] = forms.CharField(max_length=15, label="Precinct ID")
 
 class ElectionSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -69,17 +70,17 @@ class ElectionSelectionForm(forms.Form):
 
 class VoteForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        self.form_position = kwargs.pop('form_position')
+        self.form_positions = kwargs.pop('form_positions')
         self.ballot_entries = kwargs.pop('ballot_entries')
         super(VoteForm, self).__init__(*args, **kwargs)
-        ballot_entry_items = []
-        for ballot_entry in self.ballot_entries:
-            if self.form_position == ballot_entry.position:
-                pk = ballot_entry.candidate_id
-                c = Candidate.objects.get(pk=pk)
-                candid = c.first_name + " " + c.last_name
-                tuple = (pk, candid)
-                ballot_entry_items.append(tuple)
-        ballot_entry_items.sort(key=lambda candidate: candidate[1])
-        self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
-        self.initial[self.form_position] = ballot_entry_items[0]
+        for position in self.form_positions:
+            ballot_entry_items = []
+            for ballot_entry in self.ballot_entries:
+                if position == ballot_entry.position:
+                    pk = ballot_entry.candidate_id
+                    c = Candidate.objects.get(pk=pk)
+                    candid = c.first_name + " " + c.last_name
+                    tuple = (pk, candid)
+                    ballot_entry_items.append(tuple)
+            ballot_entry_items.sort(key=lambda candidate: candidate[1])
+            self.fields[position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
