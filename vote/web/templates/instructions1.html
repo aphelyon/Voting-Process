@@ -16,15 +16,17 @@
 <br>
 <center><p>Select "Yes" below and press the "Next" button to coninute.</p></center>
 <br>
-<center><label><input type="checkbox" name="yes"/>Yes</label></center><br>
-<center><label><input type="checkbox" name="no"/>No</label>
+<form method="post" class="center">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" name="next">Next</button>
+</form>
 <br></center>
 <footer>
 
     <!--<div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; right:20">
         <a href="../instructions2">Next</a>
     </div>-->
-    <a href="../instructions2" class="btn btn-lg btn-danger pull-right" role="button" >Next</a>
 </footer>
 
 {% endblock %}

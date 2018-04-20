@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel=stylesheet href="https://s3-us-west-2.amazonaws.com/colors-css/2.2.0/colors.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <!-- Add additional CSS in static file -->
+  {% load static %}
+  {% load increment %}
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+
+  <div class="container-fluid">
+    <div class="row">
+      {% block nav %}
+      <div class="mynav">
+          <a href="{% url 'instructions1' %}">Instructions</a>
+          <a href="{% url 'instructions2' %}">Instructions (cont.)</a>
+          {% with "0" as strpos%}
+          {% for pos in positions %}
+              <a href = "{%url 'vote' strpos %}" class="nav-link">{{pos}}</a>
+              {{increment|strpos}}
+          {% endfor %}
+          {% endwith %}
+      </div>
+      {% endblock %}
+      <div class = "panel panel-default container" >
+        <div class = "panel-body">
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    </div>
+  </div>
+</body>
+
+</html>
