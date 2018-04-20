@@ -30,11 +30,13 @@ python web/manage.py createsuperuser
 ## Name of valid, registered voter
 After logging in with your self-made superuser...
 
-1. First name: john
+Hash:
+9e9eefe71af76610bac9bee7c5793b64
 
-2. Last name: doe
-
-3. DOB: 01/01/1970
+Juan
+Garcia
+123 Main Street
+2019-11
 
 
 ## Set Up Printer
