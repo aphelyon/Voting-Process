@@ -12,6 +12,9 @@
 <!--<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
 -->
 {% block content %}
+{% if ok %}
+   <h1 class="center" id="green"> {{ success_msg }} </h1> </br>
+{% endif %}
 <h2 class="center"> Select an Election for the voters to vote on </h2> </br>
 <form method="post" class="center">
 {% csrf_token %}
