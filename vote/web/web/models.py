@@ -25,7 +25,7 @@ class AnonVote(models.Model):
 
 class BallotEntry(models.Model):
     party = models.CharField(max_length=100)
-    position = models.CharField()
+    position = models.CharField(max_length=100000)
     num_votes = models.IntegerField()
     candidate_id = models.IntegerField()
     election_id = models.CharField(max_length=100)
