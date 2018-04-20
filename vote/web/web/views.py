@@ -14,6 +14,8 @@ from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
 import qrcode
 import io
+from binascii import hexlify
+import os
 
 def login(request):
     if request.method == "POST":
@@ -385,6 +387,26 @@ def fetch_and_store_voter_info(precinct_id, api_key):
         return success()
     else:
         return resp
+
+
+@login_required
+def media_page(request):
+    form = web.forms.MediaForm()
+    if request.method == "GET":
+        return render(request, 'add_media_partner.html', {'form':form})
+
+    f = web.forms.MediaForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'add_media_partner.html', {'form':form})
+    company = f.cleaned_data['company_name']
+    key = hexlify(os.urandom(25)).decode()
+
+    try:
+        new_entry = MediaID.objects.create(company_name=company, api_key=key)
+    except:
+        return render(request, 'add_media_partner.html', {'ok': False, 'err_msg': "Media partner failed to be added.", 'form': form})
+
+    return render(request, 'add_media_partner.html', {'ok': True, 'success_msg': "Media partner successfully added.", 'form': form, 'key':key}) 
 
 #Helper methods
 def error(err_msg):
