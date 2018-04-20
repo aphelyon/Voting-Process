@@ -49,3 +49,9 @@ For Linux:
 
 
 The above sequence of steps should print "Hello World" from the thermal printer.
+
+## Referendum Support
+- Everyone needs to create a candidate First Name: In, Last Name: favor, dob doesn't matter
+- ditto for First Name: Not in, Last Name: favor, dob doesn't matter
+
+- then create ballot entry with position equal to referendum question -- Start with  "Referendum #x." for parsing purposes 
