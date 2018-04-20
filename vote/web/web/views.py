@@ -183,17 +183,18 @@ def create_ballot_entry(request):
     party = f.cleaned_data['party']
     election = f.cleaned_data['election']
     candidate = f.cleaned_data['candidate']
+    precinct_id = f.cleaned_data['precinct_id']
     num_votes = 0
     get_ballot_entries = BallotEntry.objects.all()
     ballot = [ballot_entry.as_json() for ballot_entry in get_ballot_entries]
     failure = False
     for ballot_entry in ballot:
-        if position == ballot_entry['position'] and party == ballot_entry['party'] and election == ballot_entry['election_id'] and candidate == str(ballot_entry['candidate_id']):
+        if position == ballot_entry['position'] and party == ballot_entry['party'] and election == ballot_entry['election_id'] and candidate == str(ballot_entry['candidate_id']) and precinct_id == ballot_entry['precinct_id']:
             failure = True
     if failure:
         response = {'ok': False, 'error_msg': "Ballot entry already exists", 'form': form}
         return render(request, 'add_candidate.html', response)
-    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position)
+    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position, precinct_id=precinct_id)
     e = Election.objects.get(pk=election)
     c = Candidate.objects.get(pk=candidate)
     e.ballotEntries.add(new_ballot_entry)
@@ -239,7 +240,7 @@ def election_details(request, year, month):
                 if position == ballot_entry.position:
                     c = Candidate.objects.get(pk=ballot_entry.candidate_id)
                     candid = dict(first_name=c.first_name, last_name=c.last_name, num_votes=ballot_entry.num_votes,
-                         party=ballot_entry.party)
+                         party=ballot_entry.party, precinct_id=ballot_entry.precinct_id)
                     ballotEntries.append(candid)
             position_dictionary[position] = ballotEntries
         return JsonResponse({'success': success, 'positions': position_dictionary})
@@ -282,7 +283,9 @@ def election_selection(request):
     if not f.is_valid():
         return render(request, 'election_selection.html', {'form': f})
     election = f.cleaned_data['election']
+    precinct_id = f.cleaned_data['precinct_id']
     request.session['election'] = election
+    request.session['precinct_id'] = precinct_id
     return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True})
 
 @voter_auth
@@ -294,9 +297,10 @@ def vote(request, pos_num):
     ballot_entries = []
     #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
-        ballot_entries.append(ballot_entry)
-        if ballot_entry.position not in positions:
-            positions.append(ballot_entry.position)
+        if ballot_entry.precinct_id == request.session['precinct_id']:
+            ballot_entries.append(ballot_entry)
+            if ballot_entry.position not in positions:
+                positions.append(ballot_entry.position)
 
     position = positions[pos_num]
     maxPosition = len(positions) - 1
@@ -345,7 +349,7 @@ def vote(request, pos_num):
                     candidate = Candidate.objects.get(pk=candidate_pk)
                     voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
             count += 1
-        return render(request, 'voter_finished.html')
+        return redirect('../voter_finished')
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):
@@ -405,7 +409,7 @@ def media_page(request):
     except:
         return render(request, 'add_media_partner.html', {'ok': False, 'err_msg': "Media partner failed to be added.", 'form': form})
 
-    return render(request, 'add_media_partner.html', {'ok': True, 'success_msg': "Media partner successfully added.", 'form': form, 'key':key}) 
+    return render(request, 'add_media_partner.html', {'ok': True, 'success_msg': "Media partner successfully added.", 'form': form, 'key':key})
 
 #Helper methods
 def error(err_msg):

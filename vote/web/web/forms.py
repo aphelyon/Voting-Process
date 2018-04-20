@@ -52,6 +52,7 @@ class AddForm(forms.Form):
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
         self.fields['position'] = forms.CharField(max_length=100, label="Position")
         self.fields['party'] = forms.CharField(max_length=100, label="Party")
+        self.fields['precinct_id'] = forms.CharField(max_length=15, label="Precinct ID")
 
 class ElectionSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -66,6 +67,7 @@ class ElectionSelectionForm(forms.Form):
             election_items.append(tuple)
         election_items.sort(key=lambda election: election[1])
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
+        self.fields['precinct_id'] = forms.CharField(max_length=15)
 
 class VoteForm(forms.Form):
     def __init__(self, *args, **kwargs):
