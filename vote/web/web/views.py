@@ -202,22 +202,46 @@ def create_ballot_entry(request):
     response = {"Status": "200", 'ok': True, 'success_msg': "Ballot Entry was successfully created", 'form': form, 'Ballot_Entry': new_ballot_entry.as_json()}
     return render(request, 'add_candidate.html', response)
 
-def elections(request):
+def elections(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_elections = Election.objects.all()
     all_the_elections = [election.as_json() for election in get_elections]
     return JsonResponse({'elections': all_the_elections})
 
-def candidates(request):
+def candidates(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_candidates = Candidate.objects.all()
     all_the_candidates = [candidate.as_json() for candidate in get_candidates]
     return JsonResponse({'candidates': all_the_candidates})
 
-def voters(request):
+def voters(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_voters = Voter.objects.all()
     all_the_voters = [voter.as_json() for voter in get_voters]
     return JsonResponse({'count': len(all_the_voters), 'voters': all_the_voters})
 
-def election_details(request, year, month):
+def election_details(request, year, month, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_elections = Election.objects.all()
     all_the_elections = [election.as_json() for election in get_elections]
     success = False
@@ -247,7 +271,13 @@ def election_details(request, year, month):
     else:
         return render(request, 'failure.html')
 
-def candidate_details(request, first_name, last_name, year):
+def candidate_details(request, first_name, last_name, year, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_ballot_entries = BallotEntry.objects.all()
     ballot = [ballot_entry.as_json() for ballot_entry in get_ballot_entries]
     success = False
