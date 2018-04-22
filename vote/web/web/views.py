@@ -355,7 +355,6 @@ def vote(request, pos_num):
     f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_position=position)
     if not f.is_valid():
         return render(request, 'vote.html', {'form': f,  'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
-
     if 'next' in request.POST:
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
         request.session['submission'] = submission_data
@@ -371,12 +370,12 @@ def vote(request, pos_num):
         count = 0
         for position in positions:
             candidate_pk = submission_data[str(count)]
-            for ballot_entry in elect.ballotEntries.all():
-                if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
-                    ballot_entry.num_votes += 1
-                    ballot_entry.save()
-                    candidate = Candidate.objects.get(pk=candidate_pk)
-                    anon_voter.ballotEntries.add(ballot_entry)
+            if not candidate_pk == 'ABSTAIN':
+                for ballot_entry in elect.ballotEntries.all():
+                    if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
+                        ballot_entry.num_votes += 1
+                        ballot_entry.save()
+                        anon_voter.ballotEntries.add(ballot_entry)
             count += 1
         return redirect('../voter_finished')
 
