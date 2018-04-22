@@ -42,5 +42,6 @@ urlpatterns = [
     path('instructions1', views.instructions1,name='instructions1'),
     path('instructions2', views.instructions2,name='instructions2'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
-    path('vote/<int:pos_num>', views.vote, name='vote')
+    path('vote/<int:pos_num>', views.vote, name='vote'),
+    path('vote', views.vote, name='vote')
 ]
