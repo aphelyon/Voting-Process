@@ -12,6 +12,12 @@ class VoterLoginForm(forms.Form):
     lastname = forms.CharField(max_length = 100, label = "Last Name")
     addr = forms.CharField(label = "Street Address")
 
+class VoterExitBoothForm(forms.Form):
+    QRHash = forms.CharField(max_length=100, label = "Scan QR Code")
+    firstname = forms.CharField(max_length = 100, label = "First Name")
+    lastname = forms.CharField(max_length = 100, label = "Last Name")
+    addr = forms.CharField(label = "Street Address")
+
 class RegistrationCheck(forms.Form):
     firstname = forms.CharField(max_length = 100, label = "First Name")
     lastname = forms.CharField(max_length = 100, label = "Last Name")

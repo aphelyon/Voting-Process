@@ -76,6 +76,7 @@ def instructions2(request):
 @voter_auth
 def voter_finished(request):
     request.session["auth"] = False
+    request.session["hash"] = ""
     return render(request, "voter_finished.html")
 
 @login_required
@@ -236,6 +237,17 @@ def voters(request, api_key):
     all_the_voters = [voter.as_json() for voter in get_voters]
     return JsonResponse({'count': len(all_the_voters), 'voters': all_the_voters})
 
+def vote_records(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
+    get_anon_votes = AnonVote.objects.all()
+    all_the_votes = [vote.as_json() for vote in get_anon_votes]
+    return JsonResponse({'count': len(all_the_votes), 'hashes': all_the_votes})
+
 def election_details(request, year, month, api_key):
     try:
         media = MediaID.objects.get(pk=api_key)
@@ -366,7 +378,7 @@ def vote(request, pos_num):
         return redirect('../vote/' + str(pos_num - 1))
 
     if 'submit' in request.POST:
-        anon_voter = AnonVote.objects.create(hash=request.session['hash'])
+        anon_vote = AnonVote.objects.create(hash=request.session['hash'])
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
         count = 0
         for position in positions:
@@ -375,10 +387,74 @@ def vote(request, pos_num):
                 if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
                     ballot_entry.num_votes += 1
                     ballot_entry.save()
-                    candidate = Candidate.objects.get(pk=candidate_pk)
-                    anon_voter.ballotEntries.add(ballot_entry)
+                    anon_vote.ballotEntries.add(ballot_entry)
             count += 1
+        anon_vote.save()
         return redirect('../voter_finished')
+
+def voter_exit_booth(request):
+    form = web.forms.VoterExitBoothForm()
+    if request.method == "GET":
+        return render(request, 'voter_exit_booth.html', {'form':form})
+
+    f = web.forms.VoterExitBoothForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'voter_exit_booth.html', {'form': f})
+    qr_entered = f.cleaned_data['QRHash']
+    fn_entered = f.cleaned_data['firstname']
+    ln_entered = f.cleaned_data['lastname']
+    addr_entered = f.cleaned_data['addr']
+    cur_election = request.session['election']
+
+    h = hashlib.md5()
+    h.update((fn_entered + ln_entered + addr_entered + cur_election).encode('utf-8')) # going to need to hash the election id as well
+    cur_hash = h.hexdigest()
+    if cur_hash == qr_entered:
+        request.session['hash'] = qr_entered
+        request.session['exit_auth'] = True
+        nex = reverse('vote_record')
+        response = HttpResponseRedirect(nex)
+        return response
+    else:
+        request.session['hash'] = ""
+        request.session['exit_auth'] = False
+        nex = reverse('voter_exit_booth')
+        response = HttpResponseRedirect(nex)
+        return response
+
+# This is a decorator definition to make sure that voters can only access
+# voting-confirmation page once they've been successfully authorized
+def voter_exit_auth(f):
+    def wrap(request, *args, **kwargs):
+        if "exit_auth" in request.session and request.session["exit_auth"]:
+            return f(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect('../voter_exit_booth')
+    return wrap
+
+@voter_exit_auth
+def vote_record(request):
+    hash = str(request.session['hash'])
+    anon_vote = None
+    try:
+        anon_vote = AnonVote.objects.get(hash=hash)
+    except:
+        z = 0
+        f =  2 / z
+        request.session['hash'] = ""
+        request.session['exit_auth'] = False
+        return HttpResponseRedirect('../voter_exit_booth')
+    ballot_entries = anon_vote.ballotEntries.all()
+    vote_tuples = []
+    for ballot_entry in ballot_entries:
+        position = ballot_entry.position
+        cand_id = ballot_entry.candidate_id
+        candidate = Candidate.objects.get(pk=cand_id)
+        name = candidate.first_name + " " + candidate.last_name
+        vote_tuples.append((position, name))
+    request.session['exit_auth'] = False
+    request.session['hash'] = ""
+    return render(request, "vote_record.html", {'vote_tuples': vote_tuples})
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):
