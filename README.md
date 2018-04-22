@@ -57,3 +57,8 @@ The above sequence of steps should print "Hello World" from the thermal printer.
 - ditto for First Name: Not in, Last Name: favor, dob doesn't matter
 
 - then create ballot entry with position equal to referendum question -- Start with  "Referendum #x." for parsing purposes 
+
+## API Key
+
+-For media company "Eric" the key is:
+- 9dcd336a8effa0e994aea532a5e949702ae96bf6caf14436c9
