@@ -96,3 +96,19 @@ class VoteForm(forms.Form):
 
 class MediaForm(forms.Form):
     company_name = forms.CharField(max_length=100, label="Company name")
+
+
+class DeleteForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.ballot_entries = kwargs.pop('ballot_entries')
+        super(DeleteForm, self).__init__(*args, **kwargs)
+        ballot_entry_items = []
+        for ballot_entry in self.ballot_entries:
+            pk = ballot_entry.pk
+            c = Candidate.objects.get(pk=ballot_entry.candidate_id)
+            ballot = c.first_name + " " + c.last_name + " " + str(c.dob.year) + " " + ballot_entry.position
+            tuple = (pk, ballot)
+            ballot_entry_items.append(tuple)
+        ballot_entry_items.sort(key=lambda ballot: ballot[1])
+        self.fields['ballot_entry'] = forms.CharField(widget=forms.Select(choices=ballot_entry_items))
+
