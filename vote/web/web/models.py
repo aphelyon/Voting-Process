@@ -30,6 +30,8 @@ class BallotEntry(models.Model):
 class AnonVote(models.Model):
     hash = models.CharField(max_length=100)
     ballotEntries = models.ManyToManyField(BallotEntry)
+    def as_json(self):
+        return dict(pk=self.hash)
 
 class Candidate(models.Model):
     first_name = models.CharField(max_length=100)

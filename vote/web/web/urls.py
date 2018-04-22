@@ -43,5 +43,8 @@ urlpatterns = [
     path('instructions2', views.instructions2,name='instructions2'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
     path('vote/<int:pos_num>', views.vote, name='vote'),
-    path('vote', views.vote, name='vote')
+    path('vote', views.vote, name='vote'),
+    path('voter_exit_booth', views.voter_exit_booth, name='voter_exit_booth'),
+    path('vote_record', views.vote_record, name='vote_record'),
+    path('vote_records/<api_key>', views.vote_records, name='vote_records')
 ]
