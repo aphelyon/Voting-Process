@@ -13,10 +13,13 @@
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
-{% if first %}
+
+{% if first and not last %}
     <button class = "btn btn-lg btn-danger pull-right" type="submit" name="next">Next</button>
 {% else %}
-    {% if not last %}
+    {% if first and last %}
+        <button class = "btn btn-lg btn-danger pull-right" type="submit" name="submit">Submit</button>
+    {% elif not last %}
         <button class = "btn btn-lg btn-danger pull-left"  type="submit" name="previous">Previous</button>
         <button class = "btn btn-lg btn-danger pull-right"type="submit" name="next">Next</button>
     {% else %}
