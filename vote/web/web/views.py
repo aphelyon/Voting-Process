@@ -328,7 +328,7 @@ def vote(request, pos_num):
     ballot_entries = []
     #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
-        if ballot_entry.precinct_id == request.session['precinct_id']:
+        if ballot_entry.precinct_id == request.session['precinct_id'] or ballot_entry.precinct_id == 'all':
             ballot_entries.append(ballot_entry)
             if ballot_entry.position not in positions:
                 positions.append(ballot_entry.position)
