@@ -45,6 +45,7 @@ def voter_login(request):
     cur_hash = h.hexdigest()
     if cur_hash == qr_entered:
         request.session['auth'] = True
+        request.session['hash'] = qr_entered
         nex = reverse('instructions1')
         response = HttpResponseRedirect(nex)
         return response
@@ -355,9 +356,6 @@ def vote(request, pos_num):
     if not f.is_valid():
         return render(request, 'vote.html', {'form': f,  'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
 
-
-    voted_ballot_entries = []
-
     if 'next' in request.POST:
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
         request.session['submission'] = submission_data
@@ -368,6 +366,7 @@ def vote(request, pos_num):
         return redirect('../vote/' + str(pos_num - 1))
 
     if 'submit' in request.POST:
+        anon_voter = AnonVote.objects.create(hash=request.session['hash'])
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
         count = 0
         for position in positions:
@@ -377,7 +376,7 @@ def vote(request, pos_num):
                     ballot_entry.num_votes += 1
                     ballot_entry.save()
                     candidate = Candidate.objects.get(pk=candidate_pk)
-                    voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
+                    anon_voter.ballotEntries.add(ballot_entry)
             count += 1
         return redirect('../voter_finished')
 
