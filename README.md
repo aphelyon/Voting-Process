@@ -27,17 +27,67 @@ docker exec -it vote_web_1 bash
 
 python web/manage.py createsuperuser
 
-## Name of valid, registered voter
+## Name of valid, registered voters
 After logging in with your self-made superuser...
 
-Hash:
-9e9eefe71af76610bac9bee7c5793b64
+==========
 
-Juan
-Garcia
-123 Main Street
+
+Voter 1:
+
+8746961d542a1d4f41faeea3295c596f
+
+Jessica
+
+Edwards
+
+513 Andrew Trace
+
 2019-11
 
+==========
+
+Voter 2:
+
+6b697f9c1023bfd1f6729d11e06fe96e
+
+Robert
+
+Rogers
+
+808 Brooks Squares
+
+2019-11
+
+==========
+
+Voter 3:
+
+03064f172e9465ae9ae09b7ca8462769
+
+Darren
+
+Johnson
+
+507 Seth Street
+
+2019-11
+
+==========
+
+Voter 4:
+
+d8cde49da3dbab23d026c1302b464e73
+
+Patrick
+
+Trevino
+
+520 Nicole Island
+
+2019-11
+
+==========
 
 ## Set Up Printer
 For Linux:
