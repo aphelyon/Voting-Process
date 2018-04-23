@@ -18,8 +18,6 @@ from binascii import hexlify
 import os
 
 def login(request):
-    if request.method == "POST":
-        fetch_and_store_voter_info("0405")
     if request.user.is_authenticated:
         return HttpResponseRedirect("/registration_check/")
     form = web.forms.LoginForm()
@@ -358,6 +356,7 @@ def election_selection(request):
     precinct_id = f.cleaned_data['precinct_id']
     request.session['election'] = election
     request.session['precinct_id'] = precinct_id
+    fetch_and_store_voter_info(precinct_id)
     return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True})
 
 @voter_auth
