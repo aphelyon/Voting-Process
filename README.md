@@ -30,6 +30,8 @@ python web/manage.py createsuperuser
 ## Name of valid, registered voters
 After logging in with your self-made superuser...
 
+Precinct is "0405"
+
 ==========
 
 
