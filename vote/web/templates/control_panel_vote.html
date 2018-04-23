@@ -12,7 +12,6 @@
 
   <!-- Add additional CSS in static file -->
   {% load static %}
-  {% load increment %}
   <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 </head>
 
@@ -26,8 +25,7 @@
           <a href="{% url 'instructions2' %}">Instructions (cont.)</a>
           {% with "0" as strpos%}
           {% for pos in positions %}
-              <a href = "{%url 'vote' strpos %}" class="nav-link">{{pos}}</a>
-              {{increment|strpos}}
+              <a href = "{%url 'vote' forloop.counter0%}"  class="nav-link">{{pos}}</a>
           {% endfor %}
           {% endwith %}
       </div>
