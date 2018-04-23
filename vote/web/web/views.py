@@ -19,7 +19,7 @@ import os
 
 def login(request):
     if request.method == "POST":
-        fetch_and_store_voter_info("0405","12345")
+        fetch_and_store_voter_info("0405")
     if request.user.is_authenticated:
         return HttpResponseRedirect("/registration_check/")
     form = web.forms.LoginForm()
@@ -486,12 +486,11 @@ def vote_record(request):
     return render(request, "vote_record.html", {'vote_tuples': vote_tuples})
 
 #Voter registration information cataloging
-def fetch_voter_info(precinct_id, api_key):
+def fetch_voter_info(precinct_id):
 
 	#Try to query the voter registration database.
 	try:
-		req = urllib.request.Request('http://people.virginia.edu/~esm7ky/precinct1.json')
-        # req = urllib.request.Request('http://people.virginia.edu/~esm7ky/precinct.json')
+		req = urllib.request.Request('http://CS3240votingproject.org/pollingsite/' + str(precinct_id) + "/?key=goofy")
 	except e:
 		return error("Failed to fetch voter information.")
 
@@ -503,11 +502,11 @@ def fetch_voter_info(precinct_id, api_key):
 
 
 #Store voter information in the local database.
-def fetch_and_store_voter_info(precinct_id, api_key):
+def fetch_and_store_voter_info(precinct_id):
     # Remove all voters currently in database
     Voter.objects.all().delete()
 	# Fetch voter information
-    resp = fetch_voter_info(precinct_id, api_key)
+    resp = fetch_voter_info(precinct_id)
 
 	#Store voter information if it worked.
     if resp["status"]:
