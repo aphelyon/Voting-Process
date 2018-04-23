@@ -12,6 +12,48 @@
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
-<button class="btn btn-lg btn-danger" type="submit">Submit</button>
+<button class="btn btn-lg btn-danger" onclick="clearFields()" type="submit">Submit</button>
 </form>
 {% endblock %}
+
+
+<script>
+    $(document).ready(function(){
+        document.getElementById();
+    });
+</script>
+
+<script>
+$("#clear").click(function(){
+    $(".center input[type='text']").val(""); 
+});
+
+
+</script>
+
+<script type="text/javascript">
+    $.ajax.....
+     success: function() {
+          $("#id_firstname").val('');
+          $("#id_lastname").val('');
+          $("#id_addr").val('');
+     }
+</script>
+
+<script>
+
+
+function setText(id,newvalue) {
+  var s= document.getElementById(id);
+  s.innerHTML = newvalue;
+
+}    
+window.onload=function() {
+  /*setText("This-is-the-real-id","Hello there");*/
+}
+function clearFields(){
+setText(id_firstname,"");
+setText(id_lastname,"");
+setText(id_addr,"");
+}
+</script>
