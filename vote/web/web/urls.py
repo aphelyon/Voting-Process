@@ -32,6 +32,7 @@ urlpatterns = [
     path('create_candidate', views.create_candidate, name='create_candidate'),
     path('create_election', views.create_election, name='create_election'),
     path('create_ballot_entry', views.create_ballot_entry, name='create_ballot_entry'),
+    path('delete_ballot_entry', views.delete_ballot_entry, name='delete_ballot_entry'),
     path('add_media_partner', views.media_page, name='add_media_partner'),
     path('elections/<api_key>', views.elections, name='elections'),
     path('elections/<int:year>-<int:month>/<api_key>', views.election_details, name='election_details'),

@@ -204,6 +204,35 @@ def create_ballot_entry(request):
     response = {"Status": "200", 'ok': True, 'success_msg': "Ballot Entry was successfully created", 'form': form, 'Ballot_Entry': new_ballot_entry.as_json()}
     return render(request, 'add_candidate.html', response)
 
+@login_required
+def delete_ballot_entry(request):
+    if 'election' in request.session:
+        election = request.session['election']
+    elect = Election.objects.get(election_id=election)
+    ballot_entries = []
+    for ballot_entry in elect.ballotEntries.all():
+        ballot_entries.append(ballot_entry)
+    form = web.forms.DeleteForm(ballot_entries=ballot_entries)
+    if request.method == "GET":
+        return render(request, 'delete_candidate.html', {'form': form})
+    f = web.forms.DeleteForm(request.POST, ballot_entries=ballot_entries)
+    if not f.is_valid():
+        return render(request, 'delete_candidate.html', {'form': f})
+    ballot_entry = f.cleaned_data['ballot_entry']
+    ballot = BallotEntry.objects.get(pk=ballot_entry)
+    position = ballot.position
+    candidate = Candidate.objects.get(pk=ballot.candidate_id)
+    election = Election.objects.get(pk=ballot.election_id)
+    candidate.ballotEntries.remove(ballot)
+    election.ballotEntries.remove(ballot)
+    BallotEntry.objects.filter(pk=ballot_entry).delete()
+    ballot_entries = []
+    for ballot_entry in elect.ballotEntries.all():
+        ballot_entries.append(ballot_entry)
+    form = web.forms.DeleteForm(ballot_entries=ballot_entries)
+    response = {"Status": "200", 'ok': True, 'success_msg': "The Ballot Entry " + candidate.first_name + " " + candidate.last_name + " " + str(candidate.dob.year) + " " + position + " was successfully deleted" , 'form': form}
+    return render(request, 'delete_candidate.html', response)
+
 def elections(request, api_key):
     try:
         media = MediaID.objects.get(pk=api_key)
