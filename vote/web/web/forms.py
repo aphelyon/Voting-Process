@@ -93,7 +93,12 @@ class VoteForm(forms.Form):
         ballot_entry_items.append(tuple)
         self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
         self.initial[self.form_position] = ballot_entry_items[-1]
-
+        
+        
+class SampleVoteForm(forms.Form):
+    list_of_candidates = [(0, 'George Washington'),(1,'Abraham Lincoln'),(2,'Thomas Jefferson')]
+    candidates = forms.CharField(widget=forms.RadioSelect(choices=list_of_candidates))
+    
 class MediaForm(forms.Form):
     company_name = forms.CharField(max_length=100, label="Company name")
 
