@@ -5,8 +5,10 @@
 <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Bootstrap imports -->
+{% load static %}
 {% if user.is_superuser %}
 {% block content %}
+
   <title>Media Partner Adder</title>
     {% if ok %}
    <h1 class="center" id="green"> {{ success_msg }} </h1> </br>
@@ -24,4 +26,7 @@
 {% else %}
 <h2 class="center"> Access Denied </h2>
 <p>You do not have permission to view this page.</p>
+
+
 {% endif %}
+
