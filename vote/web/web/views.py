@@ -67,7 +67,11 @@ def voter_auth(f):
 
 @voter_auth
 def instructions1(request):
-    return render(request,'instructions1.html')
+    form = web.forms.SampleVoteForm()
+    if request.method == "GET":
+        return render(request,'instructions1.html', {'form': form})
+    if 'next' in request.POST:
+        return redirect('../instructions2')
 
 @voter_auth
 def instructions2(request):
@@ -366,6 +370,7 @@ def vote(request, pos_num):
         election = request.session['election']
     elect = Election.objects.get(election_id=election)
     positions = []
+    position_numbers = []
     ballot_entries = []
     #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
@@ -392,7 +397,7 @@ def vote(request, pos_num):
 
     form = web.forms.VoteForm(ballot_entries=ballot_entries, form_position=position)
     if request.method == "GET":
-        return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
+        return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last, 'positions': positions})
     f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_position=position)
     if not f.is_valid():
         return render(request, 'vote.html', {'form': f,  'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
