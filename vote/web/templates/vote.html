@@ -5,7 +5,8 @@
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Bootstrap imports -->
 
-{% extends "base.html" %}
+{% include "base.html" %}
+{% include "control_panel_vote.html" with positions=positions position_numbers=position_numbers%}
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 {% block content %}
