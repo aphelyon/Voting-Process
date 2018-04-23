@@ -545,6 +545,12 @@ def media_page(request):
 
     return render(request, 'add_media_partner.html', {'ok': True, 'success_msg': "Media partner successfully added.", 'form': form, 'key':key})
 
+
+@login_required
+def media_map(request):
+    context = {"media_partners": MediaID.objects.all()}   
+    return render(request, 'list_media_partners.html', context)
+
 #Helper methods
 def error(err_msg):
     return {'status': False, 'error': err_msg}
