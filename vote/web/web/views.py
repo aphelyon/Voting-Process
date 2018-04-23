@@ -14,6 +14,8 @@ from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
 import qrcode
 import io
+from binascii import hexlify
+import os
 
 def login(request):
     if request.method == "POST":
@@ -43,6 +45,7 @@ def voter_login(request):
     cur_hash = h.hexdigest()
     if cur_hash == qr_entered:
         request.session['auth'] = True
+        request.session['hash'] = qr_entered
         nex = reverse('instructions1')
         response = HttpResponseRedirect(nex)
         return response
@@ -77,6 +80,7 @@ def instructions2(request):
 @voter_auth
 def voter_finished(request):
     request.session["auth"] = False
+    request.session["hash"] = ""
     return render(request, "voter_finished.html")
 
 @login_required
@@ -185,17 +189,18 @@ def create_ballot_entry(request):
     party = f.cleaned_data['party']
     election = f.cleaned_data['election']
     candidate = f.cleaned_data['candidate']
+    precinct_id = f.cleaned_data['precinct_id']
     num_votes = 0
     get_ballot_entries = BallotEntry.objects.all()
     ballot = [ballot_entry.as_json() for ballot_entry in get_ballot_entries]
     failure = False
     for ballot_entry in ballot:
-        if position == ballot_entry['position'] and party == ballot_entry['party'] and election == ballot_entry['election_id'] and candidate == str(ballot_entry['candidate_id']):
+        if position == ballot_entry['position'] and party == ballot_entry['party'] and election == ballot_entry['election_id'] and candidate == str(ballot_entry['candidate_id']) and precinct_id == ballot_entry['precinct_id']:
             failure = True
     if failure:
         response = {'ok': False, 'error_msg': "Ballot entry already exists", 'form': form}
         return render(request, 'add_candidate.html', response)
-    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position)
+    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position, precinct_id=precinct_id)
     e = Election.objects.get(pk=election)
     c = Candidate.objects.get(pk=candidate)
     e.ballotEntries.add(new_ballot_entry)
@@ -203,22 +208,86 @@ def create_ballot_entry(request):
     response = {"Status": "200", 'ok': True, 'success_msg': "Ballot Entry was successfully created", 'form': form, 'Ballot_Entry': new_ballot_entry.as_json()}
     return render(request, 'add_candidate.html', response)
 
-def elections(request):
+@login_required
+def delete_ballot_entry(request):
+    if 'election' in request.session:
+        election = request.session['election']
+    elect = Election.objects.get(election_id=election)
+    ballot_entries = []
+    for ballot_entry in elect.ballotEntries.all():
+        ballot_entries.append(ballot_entry)
+    form = web.forms.DeleteForm(ballot_entries=ballot_entries)
+    if request.method == "GET":
+        return render(request, 'delete_ballot_entry.html', {'form': form})
+    f = web.forms.DeleteForm(request.POST, ballot_entries=ballot_entries)
+    if not f.is_valid():
+        return render(request, 'delete_ballot_entry.html', {'form': f})
+    ballot_entry = f.cleaned_data['ballot_entry']
+    ballot = BallotEntry.objects.get(pk=ballot_entry)
+    position = ballot.position
+    candidate = Candidate.objects.get(pk=ballot.candidate_id)
+    election = Election.objects.get(pk=ballot.election_id)
+    candidate.ballotEntries.remove(ballot)
+    election.ballotEntries.remove(ballot)
+    BallotEntry.objects.filter(pk=ballot_entry).delete()
+    ballot_entries = []
+    for ballot_entry in elect.ballotEntries.all():
+        ballot_entries.append(ballot_entry)
+    form = web.forms.DeleteForm(ballot_entries=ballot_entries)
+    response = {"Status": "200", 'ok': True, 'success_msg': "The Ballot Entry " + candidate.first_name + " " + candidate.last_name + " " + str(candidate.dob.year) + " " + position + " was successfully deleted" , 'form': form}
+    return render(request, 'delete_ballot_entry.html', response)
+
+def elections(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_elections = Election.objects.all()
     all_the_elections = [election.as_json() for election in get_elections]
     return JsonResponse({'elections': all_the_elections})
 
-def candidates(request):
+def candidates(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_candidates = Candidate.objects.all()
     all_the_candidates = [candidate.as_json() for candidate in get_candidates]
     return JsonResponse({'candidates': all_the_candidates})
 
-def voters(request):
+def voters(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_voters = Voter.objects.all()
     all_the_voters = [voter.as_json() for voter in get_voters]
     return JsonResponse({'count': len(all_the_voters), 'voters': all_the_voters})
 
-def election_details(request, year, month):
+def vote_records(request, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
+    get_anon_votes = AnonVote.objects.all()
+    all_the_votes = [vote.as_json() for vote in get_anon_votes]
+    return JsonResponse({'count': len(all_the_votes), 'hashes': all_the_votes})
+
+def election_details(request, year, month, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_elections = Election.objects.all()
     all_the_elections = [election.as_json() for election in get_elections]
     success = False
@@ -241,14 +310,20 @@ def election_details(request, year, month):
                 if position == ballot_entry.position:
                     c = Candidate.objects.get(pk=ballot_entry.candidate_id)
                     candid = dict(first_name=c.first_name, last_name=c.last_name, num_votes=ballot_entry.num_votes,
-                         party=ballot_entry.party)
+                         party=ballot_entry.party, precinct_id=ballot_entry.precinct_id)
                     ballotEntries.append(candid)
             position_dictionary[position] = ballotEntries
         return JsonResponse({'success': success, 'positions': position_dictionary})
     else:
         return render(request, 'failure.html')
 
-def candidate_details(request, first_name, last_name, year):
+def candidate_details(request, first_name, last_name, year, api_key):
+    try:
+        media = MediaID.objects.get(pk=api_key)
+    except MediaID.DoesNotExist:
+        media = None
+    if media == None:
+        return render(request, 'api_failure.html')
     get_ballot_entries = BallotEntry.objects.all()
     ballot = [ballot_entry.as_json() for ballot_entry in get_ballot_entries]
     success = False
@@ -284,7 +359,9 @@ def election_selection(request):
     if not f.is_valid():
         return render(request, 'election_selection.html', {'form': f})
     election = f.cleaned_data['election']
+    precinct_id = f.cleaned_data['precinct_id']
     request.session['election'] = election
+    request.session['precinct_id'] = precinct_id
     return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True})
 
 @voter_auth
@@ -297,9 +374,10 @@ def vote(request, pos_num):
     ballot_entries = []
     #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
-        ballot_entries.append(ballot_entry)
-        if ballot_entry.position not in positions:
-            positions.append(ballot_entry.position)
+        if ballot_entry.precinct_id == request.session['precinct_id'] or ballot_entry.precinct_id == 'all':
+            ballot_entries.append(ballot_entry)
+            if ballot_entry.position not in positions:
+                positions.append(ballot_entry.position)
 
     position = positions[pos_num]
     maxPosition = len(positions) - 1
@@ -323,10 +401,6 @@ def vote(request, pos_num):
     f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_position=position)
     if not f.is_valid():
         return render(request, 'vote.html', {'form': f,  'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
-
-
-    voted_ballot_entries = []
-
     if 'next' in request.POST:
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
         request.session['submission'] = submission_data
@@ -337,18 +411,84 @@ def vote(request, pos_num):
         return redirect('../vote/' + str(pos_num - 1))
 
     if 'submit' in request.POST:
+        anon_vote = AnonVote.objects.create(hash=request.session['hash'])
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
         count = 0
         for position in positions:
             candidate_pk = submission_data[str(count)]
-            for ballot_entry in elect.ballotEntries.all():
-                if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
-                    ballot_entry.num_votes += 1
-                    ballot_entry.save()
-                    candidate = Candidate.objects.get(pk=candidate_pk)
-                    voted_ballot_entries.append(candidate.first_name + " " + candidate.last_name + " " + str(ballot_entry.num_votes))
+            if not candidate_pk == 'ABSTAIN':
+                for ballot_entry in elect.ballotEntries.all():
+                    if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
+                        ballot_entry.num_votes += 1
+                        ballot_entry.save()
+                        anon_vote.ballotEntries.add(ballot_entry)
             count += 1
-        return render(request, 'voter_finished.html')
+        anon_vote.save()
+        return redirect('../voter_finished')
+
+def voter_exit_booth(request):
+    form = web.forms.VoterExitBoothForm()
+    if request.method == "GET":
+        return render(request, 'voter_exit_booth.html', {'form':form})
+
+    f = web.forms.VoterExitBoothForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'voter_exit_booth.html', {'form': f})
+    qr_entered = f.cleaned_data['QRHash']
+    fn_entered = f.cleaned_data['firstname']
+    ln_entered = f.cleaned_data['lastname']
+    addr_entered = f.cleaned_data['addr']
+    cur_election = request.session['election']
+
+    h = hashlib.md5()
+    h.update((fn_entered + ln_entered + addr_entered + cur_election).encode('utf-8')) # going to need to hash the election id as well
+    cur_hash = h.hexdigest()
+    if cur_hash == qr_entered:
+        request.session['hash'] = qr_entered
+        request.session['exit_auth'] = True
+        nex = reverse('vote_record')
+        response = HttpResponseRedirect(nex)
+        return response
+    else:
+        request.session['hash'] = ""
+        request.session['exit_auth'] = False
+        nex = reverse('voter_exit_booth')
+        response = HttpResponseRedirect(nex)
+        return response
+
+# This is a decorator definition to make sure that voters can only access
+# voting-confirmation page once they've been successfully authorized
+def voter_exit_auth(f):
+    def wrap(request, *args, **kwargs):
+        if "exit_auth" in request.session and request.session["exit_auth"]:
+            return f(request, *args, **kwargs)
+        else:
+            return HttpResponseRedirect('../voter_exit_booth')
+    return wrap
+
+@voter_exit_auth
+def vote_record(request):
+    hash = str(request.session['hash'])
+    anon_vote = None
+    try:
+        anon_vote = AnonVote.objects.get(hash=hash)
+    except:
+        z = 0
+        f =  2 / z
+        request.session['hash'] = ""
+        request.session['exit_auth'] = False
+        return HttpResponseRedirect('../voter_exit_booth')
+    ballot_entries = anon_vote.ballotEntries.all()
+    vote_tuples = []
+    for ballot_entry in ballot_entries:
+        position = ballot_entry.position
+        cand_id = ballot_entry.candidate_id
+        candidate = Candidate.objects.get(pk=cand_id)
+        name = candidate.first_name + " " + candidate.last_name
+        vote_tuples.append((position, name))
+    request.session['exit_auth'] = False
+    request.session['hash'] = ""
+    return render(request, "vote_record.html", {'vote_tuples': vote_tuples})
 
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id, api_key):
@@ -389,6 +529,32 @@ def fetch_and_store_voter_info(precinct_id, api_key):
         return success()
     else:
         return resp
+
+
+@login_required
+def media_page(request):
+    form = web.forms.MediaForm()
+    if request.method == "GET":
+        return render(request, 'add_media_partner.html', {'form':form})
+
+    f = web.forms.MediaForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'add_media_partner.html', {'form':form})
+    company = f.cleaned_data['company_name']
+    key = hexlify(os.urandom(25)).decode()
+
+    try:
+        new_entry = MediaID.objects.create(company_name=company, api_key=key)
+    except:
+        return render(request, 'add_media_partner.html', {'ok': False, 'err_msg': "Media partner failed to be added.", 'form': form})
+
+    return render(request, 'add_media_partner.html', {'ok': True, 'success_msg': "Media partner successfully added.", 'form': form, 'key':key})
+
+
+@login_required
+def media_map(request):
+    context = {"media_partners": MediaID.objects.all()}   
+    return render(request, 'list_media_partners.html', context)
 
 #Helper methods
 def error(err_msg):

@@ -27,15 +27,69 @@ docker exec -it vote_web_1 bash
 
 python web/manage.py createsuperuser
 
-## Name of valid, registered voter
+## Name of valid, registered voters
 After logging in with your self-made superuser...
 
-1. First name: john
+Precinct is "0405"
 
-2. Last name: doe
+==========
 
-3. DOB: 01/01/1970
 
+Voter 1:
+
+8746961d542a1d4f41faeea3295c596f
+
+Jessica
+
+Edwards
+
+513 Andrew Trace
+
+2019-11
+
+==========
+
+Voter 2:
+
+6b697f9c1023bfd1f6729d11e06fe96e
+
+Robert
+
+Rogers
+
+808 Brooks Squares
+
+2019-11
+
+==========
+
+Voter 3:
+
+03064f172e9465ae9ae09b7ca8462769
+
+Darren
+
+Johnson
+
+507 Seth Street
+
+2019-11
+
+==========
+
+Voter 4:
+
+d8cde49da3dbab23d026c1302b464e73
+
+Patrick
+
+Trevino
+
+520 Nicole Island
+
+2019-11
+
+==========
 
 ## Set Up Printer
 For Linux:
@@ -49,3 +103,14 @@ For Linux:
 
 
 The above sequence of steps should print "Hello World" from the thermal printer.
+
+## Referendum Support
+- Everyone needs to create a candidate First Name: In, Last Name: favor, dob doesn't matter
+- ditto for First Name: Not in, Last Name: favor, dob doesn't matter
+
+- then create ballot entry with position equal to referendum question -- Start with  "Referendum #x." for parsing purposes 
+
+## API Key
+
+-For media company "Eric" the key is:
+- 9dcd336a8effa0e994aea532a5e949702ae96bf6caf14436c9

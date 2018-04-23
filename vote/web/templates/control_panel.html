@@ -25,7 +25,10 @@
           <a href="{% url  'create_election' %}" class="nav-link">Create Election</a>
             <a href="{% url 'create_candidate' %}" class="nav-link">Create Candidate</a>
         <a href="{% url 'create_ballot_entry' %}" class="nav-link">Create Ballot Entry</a>
+          <a href="{% url 'delete_ballot_entry' %}" class="nav-link">Delete Ballot Entry</a>
          <a href="{% url 'election_selection' %}" class="nav-link">Election Selection</a>
+         <a href="{% url 'add_media_partner' %}" class="nav-link">Add Media Partner</a>
+        <a href="{% url 'list_media_partner' %}" class="nav-link">List Media Partners</a>
           <form id="logout_form" action="{% url 'logout' %}" method="post" class="nav-link">{% csrf_token %}</form>
           <a id="logOut" href="javascript:{}" onclick="document.getElementById('logout_form').submit()">Log Out</a>
       </div>
@@ -33,10 +36,12 @@
       <div class = "panel panel-default container" >
         <div class = "panel-body">
         {% block content %}{% endblock %}
+
       </div>
     </div>
     </div>
   </div>
+  <img class = "img-responsive center-block" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" style="width: 40%" class="center" />
 </body>
 
 </html>

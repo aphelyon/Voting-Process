@@ -8,18 +8,15 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
-{% if user.is_authenticated %}
-<footer>
-    <a href="../instructions2" class="spacer btn btn-danger pull-right" role="button" >Cancel</a>
-</footer>
-{% endif %}
-
-
 <center>
   <img class="img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
 </center>
+{% block content %}
+<h2 class="center"> Voter Exit Booth</h2> </br>
+<form method="post" class="center">
+{% csrf_token %}
+{{ form.as_p }}
+<button class = "btn btn-lg btn-danger" type="submit">Login</button>
+</form>
 
-
-
-{% block content %}{% endblock %}
-
+{% endblock %}

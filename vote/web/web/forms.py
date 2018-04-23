@@ -12,6 +12,12 @@ class VoterLoginForm(forms.Form):
     lastname = forms.CharField(max_length = 100, label = "Last Name")
     addr = forms.CharField(label = "Street Address")
 
+class VoterExitBoothForm(forms.Form):
+    QRHash = forms.CharField(max_length=100, label = "Scan QR Code")
+    firstname = forms.CharField(max_length = 100, label = "First Name")
+    lastname = forms.CharField(max_length = 100, label = "Last Name")
+    addr = forms.CharField(label = "Street Address")
+
 class RegistrationCheck(forms.Form):
     firstname = forms.CharField(max_length = 100, label = "First Name")
     lastname = forms.CharField(max_length = 100, label = "Last Name")
@@ -52,6 +58,7 @@ class AddForm(forms.Form):
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
         self.fields['position'] = forms.CharField(max_length=100, label="Position")
         self.fields['party'] = forms.CharField(max_length=100, label="Party")
+        self.fields['precinct_id'] = forms.CharField(max_length=15, label="Precinct ID")
 
 class ElectionSelectionForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -66,6 +73,7 @@ class ElectionSelectionForm(forms.Form):
             election_items.append(tuple)
         election_items.sort(key=lambda election: election[1])
         self.fields['election'] = forms.CharField(widget=forms.Select(choices=election_items))
+        self.fields['precinct_id'] = forms.CharField(max_length=15)
 
 class VoteForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -81,10 +89,31 @@ class VoteForm(forms.Form):
                 tuple = (pk, candid)
                 ballot_entry_items.append(tuple)
         ballot_entry_items.sort(key=lambda candidate: candidate[1])
+        tuple = ('ABSTAIN', 'I abstain from voting for a ' + str(self.form_position))
+        ballot_entry_items.append(tuple)
         self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
-        self.initial[self.form_position] = ballot_entry_items[0]
-
-
+        self.initial[self.form_position] = ballot_entry_items[-1]
+        
+        
 class SampleVoteForm(forms.Form):
     list_of_candidates = [(0, 'George Washington'),(1,'Abraham Lincoln'),(2,'Thomas Jefferson')]
     candidates = forms.CharField(widget=forms.RadioSelect(choices=list_of_candidates))
+    
+class MediaForm(forms.Form):
+    company_name = forms.CharField(max_length=100, label="Company name")
+
+
+class DeleteForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.ballot_entries = kwargs.pop('ballot_entries')
+        super(DeleteForm, self).__init__(*args, **kwargs)
+        ballot_entry_items = []
+        for ballot_entry in self.ballot_entries:
+            pk = ballot_entry.pk
+            c = Candidate.objects.get(pk=ballot_entry.candidate_id)
+            ballot = c.first_name + " " + c.last_name + " " + str(c.dob.year) + " " + ballot_entry.position
+            tuple = (pk, ballot)
+            ballot_entry_items.append(tuple)
+        ballot_entry_items.sort(key=lambda ballot: ballot[1])
+        self.fields['ballot_entry'] = forms.CharField(widget=forms.Select(choices=ballot_entry_items))
+

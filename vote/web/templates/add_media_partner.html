@@ -1,0 +1,32 @@
+{% extends "control_panel.html" %}
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+{% load static %}
+{% if user.is_superuser %}
+{% block content %}
+
+  <title>Media Partner Adder</title>
+    {% if ok %}
+   <h1 class="center" id="green"> {{ success_msg }} </h1> </br>
+   <h2 class="center"> The key is: {{ key }} </h2> </br>
+    {% else %}
+    <h1 class="center" id="red"> {{ error_msg }} </h1> </br>
+    {% endif %}
+<h2 class="center"> Add a media partner</h2> </br>
+<form method="post" class="center">
+{% csrf_token %}
+{{ form.as_p }}
+<button class = "btn btn-lg btn-danger" type="submit">Create</button>
+</form>
+{% endblock %}
+{% else %}
+<h2 class="center"> Access Denied </h2>
+<p>You do not have permission to view this page.</p>
+
+
+{% endif %}
+

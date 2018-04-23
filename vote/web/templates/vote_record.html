@@ -8,18 +8,19 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
-{% if user.is_authenticated %}
-<footer>
-    <a href="../instructions2" class="spacer btn btn-danger pull-right" role="button" >Cancel</a>
-</footer>
-{% endif %}
-
-
 <center>
   <img class="img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
 </center>
+{% block content %}
 
+<h2 class="center"> Voter Record</h2> </br>
+<center>
+  <ul>
+    {% for position, name in vote_tuples %}
+      <li> {{ position }} -- {{ name }} </li>
+      {% endfor %}
+  </ul>
+  <a href="../voter_exit_booth" class="btn btn-danger" role="button">DONE</a>
+</center>
 
-
-{% block content %}{% endblock %}
-
+{% endblock %}
