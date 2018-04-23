@@ -8,27 +8,26 @@
 {% include "base.html" %}
 {% include "control_panel_vote.html" with positions=positions position_numbers=position_numbers%}
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 {% block content %}
 <h2 class="center"> Vote </h2> </br>
+<div class= "well">
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
-
-{% if first and not last %}
-    <button class = "btn btn-lg btn-danger pull-right" type="submit" name="next">Next</button>
+{% if first %}
+    <button type="submit" name="next">Next</button>
 {% else %}
-    {% if first and last %}
-        <button class = "btn btn-lg btn-danger pull-right" type="submit" name="submit">Submit</button>
-    {% elif not last %}
-        <button class = "btn btn-lg btn-danger pull-left"  type="submit" name="previous">Previous</button>
-        <button class = "btn btn-lg btn-danger pull-right"type="submit" name="next">Next</button>
+    {% if not last %}
+        <button type="submit" name="previous">Previous</button>
+        <button type="submit" name="next">Next</button>
     {% else %}
-        <button class = "btn btn-lg btn-danger pull-left" type="submit" name="previous">Previous</button>
-        <button class = "btn btn-lg btn-danger pull-right" type="submit" name="submit">Submit</button>
+        <button type="submit" name="previous">Previous</button>
+        <button type="submit" name="submit">Submit</button>
     {% endif %}
 {% endif %}
 
-<!--<a href="../instructions2" class="btn btn-lg btn-danger pull-left" role="button" >Back</a>-->
+
+<a href="../instructions2" class="btn btn-lg btn-danger pull-left" role="button" >Back to Instructions</a>
 </form>
 {% endblock %}
+</div>
