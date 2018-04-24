@@ -378,7 +378,6 @@ def vote(request, pos_num):
             if ballot_entry.position not in positions:
                 positions.append(ballot_entry.position)
 
-    position = positions[pos_num]
     maxPosition = len(positions) - 1
 
     if pos_num == 0:
@@ -394,24 +393,59 @@ def vote(request, pos_num):
     if pos_num == maxPosition:
         last = True
 
-    form = web.forms.VoteForm(ballot_entries=ballot_entries, form_position=position)
-    if request.method == "GET":
-        return render(request, 'vote.html', {'form': form, 'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last, 'positions': positions})
-    f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_position=position)
-    if not f.is_valid():
-        return render(request, 'vote.html', {'form': f,  'maxPosition': maxPosition, 'position_num': pos_num, 'first': first_position, 'last': last})
+    confirm = False
+    if pos_num == len(positions):
+        confirm = True
+
+    if not confirm:
+        position = positions[pos_num]
+        form = web.forms.VoteForm(ballot_entries=ballot_entries, form_position=position)
+
+        if request.method == "GET":
+            return render(request, 'vote.html',
+                          {'form': form, 'first': first_position, 'last': last, 'positions': positions})
+        f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_position=position)
+        if not f.is_valid():
+            return render(request, 'vote.html',
+                          {'form': f, 'first': first_position, 'last': last, 'positions': positions})
+
+    if confirm:
+        if request.method == "GET":
+            not_voted =[]
+            voted = []
+            not_voted_flag = False
+            count = 0
+            for position in positions:
+                if str(count) not in submission_data:
+                    not_voted.append(position)
+                    voted.append("NOT VOTED FOR")
+                    not_voted_flag = True
+                else:
+                    if submission_data[str(count)] == 'ABSTAIN':
+                        voted.append(submission_data[str(count)])
+                    else:
+                        voted.append(Candidate.objects.get(pk=submission_data[str(count)]).first_name + " " + Candidate.objects.get(pk=submission_data[str(count)]).last_name)
+                count += 1
+            return render(request, 'vote_confirm.html', {'form': submission_data, 'positions': positions, 'not_voted': not_voted, 'voted': voted, 'not_voted_flag': not_voted_flag})
+
     if 'next' in request.POST:
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
         request.session['submission'] = submission_data
         return redirect('../vote/' + str(pos_num + 1))
+
     if 'previous' in request.POST:
-        submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
-        request.session['submission'] = submission_data
+        if not confirm:
+            submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
+            request.session['submission'] = submission_data
         return redirect('../vote/' + str(pos_num - 1))
 
     if 'submit' in request.POST:
-        anon_vote = AnonVote.objects.create(hash=request.session['hash'])
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
+        request.session['submission'] = submission_data
+        return redirect('../vote/' + str(pos_num + 1))
+
+    if 'confirm' in request.POST:
+        anon_vote = AnonVote.objects.create(hash=request.session['hash'])
         count = 0
         for position in positions:
             candidate_pk = submission_data[str(count)]

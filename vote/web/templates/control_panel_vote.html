@@ -23,16 +23,11 @@
       <div class="mynav">
           <a href="{% url 'instructions1' %}">Instructions</a>
           <a href="{% url 'instructions2' %}">Instructions (cont.)</a>
-          {% with "0" as strpos%}
           {% for pos in positions %}
               <a href = "{%url 'vote' forloop.counter0%}"  class="nav-link">{{pos}}</a>
           {% endfor %}
-          {% endwith %}
       </div>
       {% endblock %}
-      <div class = "panel panel-default container" >
-        <div class = "panel-body">
-        {% block content %}{% endblock %}
       </div>
     </div>
     </div>
