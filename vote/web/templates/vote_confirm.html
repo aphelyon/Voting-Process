@@ -14,6 +14,7 @@
 <form method="post" class="center">
 {% csrf_token %}
     {% if not_voted_flag %}
+    <h1 class="center" id="red"> You must select an option for all positions</h1> </br>
         <p>You have not voted for these positions:
         {% for position in not_voted %}
             {{not_voted|index:forloop.counter0}}
@@ -24,7 +25,9 @@
         <p>{{position}}: {{ voted|index:forloop.counter0 }}</p>
     {% endfor %}
     <button class = "btn btn-lg btn-danger pull-left" type="submit" name="previous">Previous</button>
-    <button class = "btn btn-lg btn-danger pull-right" type="submit" name="confirm">Confirm</button>
+    {% if allowed %}
+        <button class = "btn btn-lg btn-danger pull-right" type="submit" name="confirm">Confirm</button>
+    {% endif %}
 <a href="../instructions2" class="btn btn-lg btn-danger pull-left" role="button" >Back to Instructions</a>
 </form>
 {% endblock %}

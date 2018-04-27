@@ -39,6 +39,10 @@ color: green;
 color: red;
 }
 
+#blue {
+color : blue;
+}
+
 select {
   width: 300px;
 }

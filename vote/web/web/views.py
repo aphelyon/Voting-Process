@@ -350,9 +350,13 @@ def candidate_details(request, first_name, last_name, year, api_key):
         return render(request, 'failure_candidate.html')
 
 def election_selection(request):
+    selected = False
+    if 'election' in request.session:
+        election = request.session['election']
+        selected = True
     form = web.forms.ElectionSelectionForm()
     if request.method == "GET":
-        return render(request, 'election_selection.html', {'form': form})
+        return render(request, 'election_selection.html', {'form': form, 'selected': selected, 'current_election': "The current election is " + election})
     f = web.forms.ElectionSelectionForm(request.POST)
     if not f.is_valid():
         return render(request, 'election_selection.html', {'form': f})
@@ -360,8 +364,9 @@ def election_selection(request):
     precinct_id = f.cleaned_data['precinct_id']
     request.session['election'] = election
     request.session['precinct_id'] = precinct_id
+    selected = False
     fetch_and_store_voter_info(precinct_id)
-    return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True})
+    return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True, 'selected': selected})
 
 @voter_auth
 def vote(request, pos_num):
@@ -415,6 +420,7 @@ def vote(request, pos_num):
             voted = []
             not_voted_flag = False
             count = 0
+            allowed = False
             for position in positions:
                 if str(count) not in submission_data:
                     not_voted.append(position)
@@ -426,7 +432,9 @@ def vote(request, pos_num):
                     else:
                         voted.append(Candidate.objects.get(pk=submission_data[str(count)]).first_name + " " + Candidate.objects.get(pk=submission_data[str(count)]).last_name)
                 count += 1
-            return render(request, 'vote_confirm.html', {'form': submission_data, 'positions': positions, 'not_voted': not_voted, 'voted': voted, 'not_voted_flag': not_voted_flag})
+            if len(submission_data) == len(positions):
+                allowed = True
+            return render(request, 'vote_confirm.html', {'form': submission_data, 'positions': positions, 'not_voted': not_voted, 'voted': voted, 'not_voted_flag': not_voted_flag, 'allowed': allowed})
 
     if 'next' in request.POST:
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]

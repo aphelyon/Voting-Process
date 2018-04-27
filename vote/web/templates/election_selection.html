@@ -12,6 +12,11 @@
 <!--<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
 -->
 {% block content %}
+{% if selected %}
+    <h1 class="center" id="blue"> {{ current_election }} </h1> </br>
+{% elif not selected and not ok %}
+    <h1 class="center" id="red"> An election is not selected </h1> </br>
+{% endif %}
 {% if ok %}
    <h1 class="center" id="green"> {{ success_msg }} </h1> </br>
 {% endif %}
