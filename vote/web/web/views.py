@@ -354,9 +354,11 @@ def election_selection(request):
     if 'election' in request.session:
         election = request.session['election']
         selected = True
+        current_election = "The current election is " + election
     form = web.forms.ElectionSelectionForm()
     if request.method == "GET":
-        return render(request, 'election_selection.html', {'form': form, 'selected': selected, 'current_election': "The current election is " + election})
+        current_election = ""
+        return render(request, 'election_selection.html', {'form': form, 'selected': selected, 'current_election': current_election})
     f = web.forms.ElectionSelectionForm(request.POST)
     if not f.is_valid():
         return render(request, 'election_selection.html', {'form': f})
