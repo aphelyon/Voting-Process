@@ -1,0 +1,31 @@
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
+{% include "base.html" %}
+{% load static %}
+{% load index %}
+{% block content %}
+<div class= "well">
+    {% include "control_panel_vote.html" with positions=positions %}
+<form method="post" class="center">
+{% csrf_token %}
+    {% if not_voted_flag %}
+        <p>You have not voted for these positions:
+        {% for position in not_voted %}
+            {{not_voted|index:forloop.counter0}}
+        {% endfor %}
+            </p>
+    {% endif %}
+    {% for position in positions %}
+        <p>{{position}}: {{ voted|index:forloop.counter0 }}</p>
+    {% endfor %}
+    <button class = "btn btn-lg btn-danger pull-left" type="submit" name="previous">Previous</button>
+    <button class = "btn btn-lg btn-danger pull-right" type="submit" name="confirm">Confirm</button>
+<a href="../instructions2" class="btn btn-lg btn-danger pull-left" role="button" >Back to Instructions</a>
+</form>
+{% endblock %}
+</div>
