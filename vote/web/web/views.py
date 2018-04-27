@@ -350,9 +350,13 @@ def candidate_details(request, first_name, last_name, year, api_key):
         return render(request, 'failure_candidate.html')
 
 def election_selection(request):
+    selected = False
+    if 'election' in request.session:
+        election = request.session['election']
+        selected = True
     form = web.forms.ElectionSelectionForm()
     if request.method == "GET":
-        return render(request, 'election_selection.html', {'form': form})
+        return render(request, 'election_selection.html', {'form': form, 'selected': selected, 'current_election': "The current election is " + election})
     f = web.forms.ElectionSelectionForm(request.POST)
     if not f.is_valid():
         return render(request, 'election_selection.html', {'form': f})
@@ -360,8 +364,9 @@ def election_selection(request):
     precinct_id = f.cleaned_data['precinct_id']
     request.session['election'] = election
     request.session['precinct_id'] = precinct_id
+    selected = False
     fetch_and_store_voter_info(precinct_id)
-    return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True})
+    return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True, 'selected': selected})
 
 @voter_auth
 def vote(request, pos_num):
