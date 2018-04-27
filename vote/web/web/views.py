@@ -420,6 +420,7 @@ def vote(request, pos_num):
             voted = []
             not_voted_flag = False
             count = 0
+            allowed = False
             for position in positions:
                 if str(count) not in submission_data:
                     not_voted.append(position)
@@ -431,7 +432,9 @@ def vote(request, pos_num):
                     else:
                         voted.append(Candidate.objects.get(pk=submission_data[str(count)]).first_name + " " + Candidate.objects.get(pk=submission_data[str(count)]).last_name)
                 count += 1
-            return render(request, 'vote_confirm.html', {'form': submission_data, 'positions': positions, 'not_voted': not_voted, 'voted': voted, 'not_voted_flag': not_voted_flag})
+            if len(submission_data) == len(positions):
+                allowed = True
+            return render(request, 'vote_confirm.html', {'form': submission_data, 'positions': positions, 'not_voted': not_voted, 'voted': voted, 'not_voted_flag': not_voted_flag, 'allowed': allowed})
 
     if 'next' in request.POST:
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
