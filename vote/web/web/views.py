@@ -76,7 +76,17 @@ def instructions1(request):
 
 @voter_auth
 def instructions2(request):
-    return render(request,'instructions2.html')
+    if request.method == "GET":
+        return render(request,'instructions2.html')
+    if 'next' in request.POST:
+        return redirect('../primary_party_select')
+
+@voter_auth
+def primary_party_select(request):
+    if request.method == "GET":
+        return render(request, 'primary_party_select.html')
+    if 'next' in request.POST:
+        return redirect('../vote/0')
 
 @voter_auth
 def voter_finished(request):

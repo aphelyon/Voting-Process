@@ -43,6 +43,7 @@ urlpatterns = [
     path('voters/<api_key>', views.voters, name='voters'),
     path('instructions1', views.instructions1,name='instructions1'),
     path('instructions2', views.instructions2,name='instructions2'),
+    path('primary_party_select', views.primary_party_select, name='primary_party_select'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
     path('vote/<int:pos_num>', views.vote, name='vote'),
     path('vote', views.vote, name='vote'),
