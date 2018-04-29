@@ -16,23 +16,22 @@
 <br>
 <center><p>Click the "Next" button to continue!</p></center>
 <br>
-<br> 
+<br>
 
 <footer>
-	
+
 <div class="container mx-auto" style="width: 60%">
 <center>
 <a href="../instructions1" class="spacer btn btn-lg btn-danger pull-left" role="button" padding= 10px >Back</a>
-<a href="../vote/0" class="spacer btn btn-lg btn-danger pull-right" role = "button" >Next</a>
+
+<form method="post" class="center">
+  {% csrf_token %}
+  <button class = "btn btn-lg btn-danger pull-right" type="submit" name="next">Next</button>
+</form>
+
 </center>
 </div>
 
-    <!--<div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; left:20">
-        <a href="../instructions1">Back</a>
-    </div>
-    <div type="button" style="color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; right:20">
-        <a href="../overview">Next</a>
-    </div>-->
 </footer>
 
 {% endblock %}

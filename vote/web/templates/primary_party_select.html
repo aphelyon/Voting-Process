@@ -1,0 +1,23 @@
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
+{% include "base.html" %}
+{% load static %}
+{% block content %}
+<div class= "well">
+  <em><h2 class="center"> Primary Party Selection </h2></em> </br>
+  <center>
+    <p> Please choose which party primary you would like to vote for. </p>
+    <form method="post" class="center">
+      {% csrf_token %}
+      <input type="radio" name="primary_party" value="Democrat"> Democrat </br>
+      <input type="radio" name="primary_party" value="Republican"> Republican </br>
+      <button class = "btn btn-lg btn-danger pull-right" type="submit" name="next">Select</button>
+    </form>
+  </center>
+</div>
+{% endblock %}

@@ -76,7 +76,21 @@ def instructions1(request):
 
 @voter_auth
 def instructions2(request):
-    return render(request,'instructions2.html')
+    if request.method == "GET":
+        return render(request,'instructions2.html')
+    if 'next' in request.POST:
+        if request.session['election_type'] == "Primary":
+            return redirect('../primary_party_select')
+        else:
+            return redirect('../vote/0')
+
+@voter_auth
+def primary_party_select(request):
+    if request.method == "GET":
+        return render(request, 'primary_party_select.html')
+    if 'next' in request.POST:
+        request.session['primary_party'] = request.POST.get("primary_party")
+        return redirect('../vote/0')
 
 @voter_auth
 def voter_finished(request):
@@ -370,14 +384,30 @@ def election_selection(request):
     precinct_id = f.cleaned_data['precinct_id']
     request.session['election'] = election
     request.session['precinct_id'] = precinct_id
+    elect_obj = Election.objects.get(pk=election)
+    request.session['election_type'] = elect_obj.election_type
     selected = False
     fetch_and_store_voter_info(precinct_id)
     return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True, 'selected': selected})
 
 @voter_auth
 def vote(request, pos_num):
+    election = None
+    election_type = None
+    primary_party = None
+    primary_blacklist = None
     if 'election' in request.session:
         election = request.session['election']
+
+    if 'election_type' in request.session:
+        election_type = request.session['election_type']
+        if election_type == "Primary":
+            primary_party = request.session['primary_party']
+            if primary_party == "Democrat":
+                primary_blacklist = "Republican"
+            else:
+                primary_blacklist = "Democrat"
+
     elect = Election.objects.get(election_id=election)
     positions = []
     position_numbers = []
@@ -385,9 +415,10 @@ def vote(request, pos_num):
     #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
         if ballot_entry.precinct_id == request.session['precinct_id'] or ballot_entry.precinct_id == 'all':
-            ballot_entries.append(ballot_entry)
-            if ballot_entry.position not in positions:
-                positions.append(ballot_entry.position)
+            if (primary_blacklist == None) or (primary_blacklist != None and ballot_entry.party != primary_blacklist):
+                ballot_entries.append(ballot_entry)
+                if ballot_entry.position not in positions:
+                    positions.append(ballot_entry.position)
 
     maxPosition = len(positions) - 1
 
