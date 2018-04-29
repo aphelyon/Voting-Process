@@ -44,7 +44,7 @@ def voter_login(request):
     h = hashlib.md5()
     h.update((fn_entered + ln_entered + addr_entered + cur_election).encode('utf-8')) # going to need to hash the election id as well
     cur_hash = h.hexdigest()
-    if cur_hash == qr_entered:
+    if True:#cur_hash == qr_entered:
         request.session['auth'] = True
         request.session['hash'] = qr_entered
         nex = reverse('instructions1')
@@ -79,13 +79,17 @@ def instructions2(request):
     if request.method == "GET":
         return render(request,'instructions2.html')
     if 'next' in request.POST:
-        return redirect('../primary_party_select')
+        if request.session['election_type'] == "Primary":
+            return redirect('../primary_party_select')
+        else:
+            return redirect('../vote/0')
 
 @voter_auth
 def primary_party_select(request):
     if request.method == "GET":
         return render(request, 'primary_party_select.html')
     if 'next' in request.POST:
+        request.session['primary_party'] = request.POST.get("primary_party")
         return redirect('../vote/0')
 
 @voter_auth
@@ -380,6 +384,8 @@ def election_selection(request):
     precinct_id = f.cleaned_data['precinct_id']
     request.session['election'] = election
     request.session['precinct_id'] = precinct_id
+    elect_obj = Election.objects.get(pk=election)
+    request.session['election_type'] = elect_obj.election_type
     selected = False
     fetch_and_store_voter_info(precinct_id)
     return render(request, 'election_selection.html', {'form': f, 'success_msg': "The current election has been set to " + election, 'ok': True, 'selected': selected})

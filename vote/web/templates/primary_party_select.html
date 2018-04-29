@@ -14,8 +14,8 @@
     <p> Please choose which party primary you would like to vote for. </p>
     <form method="post" class="center">
       {% csrf_token %}
-      <input type="radio" id="Democrat" value="Democrat"> Democrat </br>
-      <input type="radio" id="Republican" value="Republican"> Republican </br>
+      <input type="radio" name="primary_party" value="Democrat"> Democrat </br>
+      <input type="radio" name="primary_party" value="Republican"> Republican </br>
       <button class = "btn btn-lg btn-danger pull-right" type="submit" name="next">Select</button>
     </form>
   </center>
