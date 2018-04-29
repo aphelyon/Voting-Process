@@ -4,7 +4,7 @@ from urllib import request
 from time import sleep
 
 def fetch():
-	req = request.Request('http://127.0.0.1:8000/print_queue')
+	req = request.Request('http://167.99.237.230:8000/print_queue')
 	with request.urlopen(req) as response:
 		result = json.loads(response.readline().decode('utf-8'))
 	return result
