@@ -96,9 +96,10 @@ def registration_check(request):
     fn_entered = f.cleaned_data['firstname']
     ln_entered = f.cleaned_data['lastname']
     addr_entered = f.cleaned_data['addr']
+    status = 'active'
 
     try:
-        db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered, street_address=addr_entered)
+        db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered, street_address=addr_entered, voter_status=status)
     except:
         return render(request, "voter_not_registered.html")
     return voter_registered(request, fn_entered, ln_entered, addr_entered)
@@ -474,7 +475,7 @@ def vote(request, pos_num):
             else:
                 vote_q[position] = "ABSTAIN"
             count += 1
-        q.put(vote_q)            
+        q.put(vote_q)
         anon_vote.save()
         return redirect('../voter_finished')
 
@@ -613,7 +614,7 @@ def media_page(request):
 #Returns the list of media partners and their API keys.
 @login_required
 def media_map(request):
-    context = {"media_partners": MediaID.objects.all()}   
+    context = {"media_partners": MediaID.objects.all()}
     return render(request, 'list_media_partners.html', context)
 
 #Helper methods
