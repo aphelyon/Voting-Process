@@ -4,9 +4,9 @@ from urllib import request
 from time import sleep
 
 def fetch():
-	req = request.Request('127.0.0.1:8000')
+	req = request.Request('http://127.0.0.1:8000/print_queue')
 	with request.urlopen(req) as response:
-		result = json.loads(response.readall().decode('utf-8'))
+		result = json.loads(response.readline().decode('utf-8'))
 	return result
 
 def listen(printer, rate):
@@ -14,7 +14,14 @@ def listen(printer, rate):
 		while True:
 			votes = fetch()
 			for key in votes:
-				printer.text(json.dumps(votes[key]))
+				printer.text("VOTER BALLOT:\n")
+				printer.text("--------------------\n")
+				vote = votes[key]
+				printer.text("VOTER_HASH: " + vote["VOTER_HASH"] + "\n")
+				for pos in vote:
+					if pos == "VOTER_HASH": continue
+					printer.text(pos + ": " + vote[pos] + "\n")
+				printer.text("--------------------\n\n")
 				printer.cut()
 			sleep(rate)
 

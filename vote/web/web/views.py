@@ -461,6 +461,7 @@ def vote(request, pos_num):
         anon_vote = AnonVote.objects.create(hash=request.session['hash'])
         count = 0
         vote_q = dict()
+        vote_q["VOTER_HASH"]=request.session['hash']
         for position in positions:
             candidate_pk = submission_data[str(count)]
             if not candidate_pk == 'ABSTAIN':

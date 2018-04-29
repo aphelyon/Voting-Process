@@ -2,11 +2,12 @@
 
 printer:
     image: arun8r/djmodwsgi:latest #Same image as above.
-    
+    net: "host"
     volumes:
       - "$PWD:/app"
       - /dev/bus/usb:/dev/bus/usb
 
     privileged: true
+
 
     command: bash -c "python /app/print.py"
