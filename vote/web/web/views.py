@@ -44,7 +44,7 @@ def voter_login(request):
     h = hashlib.sha256()
     h.update((fn_entered + ln_entered + addr_entered + cur_election).encode('utf-8')) # going to need to hash the election id as well
     cur_hash = h.hexdigest()
-    if True:#cur_hash == qr_entered:
+    if cur_hash == qr_entered:
         request.session['auth'] = True
         request.session['hash'] = qr_entered
         nex = reverse('instructions1')
@@ -392,8 +392,22 @@ def election_selection(request):
 
 @voter_auth
 def vote(request, pos_num):
+    election = None
+    election_type = None
+    primary_party = None
+    primary_blacklist = None
     if 'election' in request.session:
         election = request.session['election']
+
+    if 'election_type' in request.session:
+        election_type = request.session['election_type']
+        if election_type == "Primary":
+            primary_party = request.session['primary_party']
+            if primary_party == "Democrat":
+                primary_blacklist = "Republican"
+            else:
+                primary_blacklist = "Democrat"
+
     elect = Election.objects.get(election_id=election)
     positions = []
     position_numbers = []
@@ -401,9 +415,10 @@ def vote(request, pos_num):
     #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
         if ballot_entry.precinct_id == request.session['precinct_id'] or ballot_entry.precinct_id == 'all':
-            ballot_entries.append(ballot_entry)
-            if ballot_entry.position not in positions:
-                positions.append(ballot_entry.position)
+            if (primary_blacklist == None) or (primary_blacklist != None and ballot_entry.party != primary_blacklist):
+                ballot_entries.append(ballot_entry)
+                if ballot_entry.position not in positions:
+                    positions.append(ballot_entry.position)
 
     maxPosition = len(positions) - 1
 
