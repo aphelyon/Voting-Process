@@ -41,7 +41,7 @@ def voter_login(request):
     addr_entered = f.cleaned_data['addr']
     cur_election = request.session['election']
 
-    h = hashlib.md5()
+    h = hashlib.sha256()
     h.update((fn_entered + ln_entered + addr_entered + cur_election).encode('utf-8')) # going to need to hash the election id as well
     cur_hash = h.hexdigest()
     if cur_hash == qr_entered:
@@ -105,7 +105,7 @@ def registration_check(request):
     return voter_registered(request, fn_entered, ln_entered, addr_entered)
 
 def voter_registered(request, fn, ln, addr):
-    h = hashlib.md5()
+    h = hashlib.sha256()
     cur_election = request.session['election']
     h.update((fn + ln + addr + cur_election).encode('utf-8'))
     qr = qrcode.QRCode(
@@ -493,7 +493,7 @@ def voter_exit_booth(request):
     addr_entered = f.cleaned_data['addr']
     cur_election = request.session['election']
 
-    h = hashlib.md5()
+    h = hashlib.sha256()
     h.update((fn_entered + ln_entered + addr_entered + cur_election).encode('utf-8')) # going to need to hash the election id as well
     cur_hash = h.hexdigest()
     if cur_hash == qr_entered:
