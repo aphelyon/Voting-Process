@@ -44,6 +44,17 @@ def voter_login(request):
     h = hashlib.sha256()
     h.update((fn_entered + ln_entered + addr_entered + cur_election).encode('utf-8')) # going to need to hash the election id as well
     cur_hash = h.hexdigest()
+
+    try:
+        db_anon_voter = AnonVote.objects.get(pk=cur_hash)
+        request.session['auth'] = False
+        request.session['hash'] = ''
+        nex = reverse('voter_login')
+        response = HttpResponseRedirect(nex)
+        return response
+    except:
+        pass
+
     if cur_hash == qr_entered:
         request.session['auth'] = True
         request.session['hash'] = qr_entered
@@ -122,6 +133,13 @@ def voter_registered(request, fn, ln, addr):
     h = hashlib.sha256()
     cur_election = request.session['election']
     h.update((fn + ln + addr + cur_election).encode('utf-8'))
+
+    try:
+        db_anon_voter = AnonVote.objects.get(pk=h.hexdigest())
+        return redirect('../voter_not_registered')
+    except:
+        pass
+
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -490,6 +508,13 @@ def vote(request, pos_num):
         return redirect('../vote/' + str(pos_num + 1))
 
     if 'confirm' in request.POST:
+        try:
+            db_anon_voter = AnonVote.objects.get(pk=request.session['hash'])
+            request.session['auth'] = False
+            request.session['hash'] = ''
+            return redirect('../voter_login') # @courtney add different page
+        except:
+            pass
         anon_vote = AnonVote.objects.create(hash=request.session['hash'])
         count = 0
         vote_q = dict()
@@ -557,8 +582,6 @@ def vote_record(request):
     try:
         anon_vote = AnonVote.objects.get(hash=hash)
     except:
-        z = 0
-        f =  2 / z
         request.session['hash'] = ""
         request.session['exit_auth'] = False
         return HttpResponseRedirect('../voter_exit_booth')
