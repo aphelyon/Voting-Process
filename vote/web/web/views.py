@@ -16,6 +16,9 @@ import qrcode
 import io
 from binascii import hexlify
 import os
+from queue import Queue
+
+q = Queue()
 
 def login(request):
     if request.user.is_authenticated:
@@ -457,6 +460,7 @@ def vote(request, pos_num):
     if 'confirm' in request.POST:
         anon_vote = AnonVote.objects.create(hash=request.session['hash'])
         count = 0
+        vote_q = dict()
         for position in positions:
             candidate_pk = submission_data[str(count)]
             if not candidate_pk == 'ABSTAIN':
@@ -465,7 +469,11 @@ def vote(request, pos_num):
                         ballot_entry.num_votes += 1
                         ballot_entry.save()
                         anon_vote.ballotEntries.add(ballot_entry)
+                vote_q[position] = Candidate.objects.get(pk=candidate_pk).first_name + " " + Candidate.objects.get(pk=candidate_pk).last_name
+            else:
+                vote_q[position] = "ABSTAIN"
             count += 1
+        q.put(vote_q)            
         anon_vote.save()
         return redirect('../voter_finished')
 
@@ -572,7 +580,16 @@ def fetch_and_store_voter_info(precinct_id):
     else:
         return resp
 
+#Returns one hundred most recent votes.
+def print_queue(request):
+    i = 0
+    d = dict()
+    while i < 100 and not q.empty():
+        d[i] = q.get()
+        i+=1
+    return JsonResponse(d)
 
+#Create an API key for the media.
 @login_required
 def media_page(request):
     form = web.forms.MediaForm()
@@ -592,7 +609,7 @@ def media_page(request):
 
     return render(request, 'add_media_partner.html', {'ok': True, 'success_msg': "Media partner successfully added.", 'form': form, 'key':key})
 
-
+#Returns the list of media partners and their API keys.
 @login_required
 def media_map(request):
     context = {"media_partners": MediaID.objects.all()}   
