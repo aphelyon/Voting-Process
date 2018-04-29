@@ -15,6 +15,8 @@ Google Drive Folder: https://drive.google.com/drive/u/1/folders/1y6NvqFzQrZ47ByX
 
 Slack Channel: https://goofy-goobers-uva.slack.com/
 
+Digital Ocean: http://167.99.237.230:8000
+
 
 ## To create a superuser
 Go to your terminal
