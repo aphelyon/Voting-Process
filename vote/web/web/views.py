@@ -512,7 +512,7 @@ def vote(request, pos_num):
             db_anon_voter = AnonVote.objects.get(pk=request.session['hash'])
             request.session['auth'] = False
             request.session['hash'] = ''
-            return redirect('../voter_login') # @courtney add different page
+            return redirect('../already_voted') # @courtney add different page
         except:
             pass
         anon_vote = AnonVote.objects.create(hash=request.session['hash'])
@@ -534,6 +534,9 @@ def vote(request, pos_num):
         q.put(vote_q)
         anon_vote.save()
         return redirect('../voter_finished')
+
+def already_voted(request):
+    return render(request,'already_voted.html')
 
 def voter_exit_booth(request):
     form = web.forms.VoterExitBoothForm()
