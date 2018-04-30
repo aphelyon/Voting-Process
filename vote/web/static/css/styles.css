@@ -10,6 +10,31 @@
     overflow: hidden;
 }
 
+.finalnav {
+	background-color:  	#d9534f;
+}
+
+.nav.navbar-nav li a{
+color:white;
+}
+
+.nav.navbar-nav > li > .dropdown-menu {
+ background-color: #ffffff; 
+ }
+
+ .navbar-nav > li > .dropdown-menu a{
+color: black;  }
+
+.nav-link {
+color: black;
+}
+
+
+
+.finalnav a:hover {
+background-color: #960018;
+    color: black;
+}
 /* Style the links inside the navigation bar */
 .mynav a {
     float: left;
@@ -53,6 +78,7 @@ select {
 
 p {
   word-wrap: break-word !important;
+  font-size: 22px;
 }
 
 ul li ul li{
