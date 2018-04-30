@@ -5,8 +5,11 @@ from time import sleep
 
 def fetch():
 	req = request.Request('http://167.99.237.230:8000/print_queue')
-	with request.urlopen(req) as response:
-		result = json.loads(response.readline().decode('utf-8'))
+	try:
+		with request.urlopen(req) as response:
+			result = json.loads(response.readline().decode('utf-8'))
+	except:
+		return {}
 	return result
 
 def listen(printer, rate):
