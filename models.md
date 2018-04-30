@@ -1,6 +1,8 @@
-## How to navigate through models 
+## How to navigate through models, and create a valid election allowing users to vote
 # Create an election
   You first must be logged in as superuser (see readme.md for how to create one)
+  
+  Navigate to Create Election
   
   You need to input an election id in the format (YYYY-MM)
   
@@ -18,7 +20,7 @@
   Enter the date of birth of the candidate in the format (YYYY-MM-DD)
         
 # Create a ballot entry for that candidate
-  You first must create an election, and then a candidate running within that election.
+  You first must create an election, and then candidate(s) running within that election.
   
   Select a candidate from the list of all the possible candidates
   
@@ -27,3 +29,10 @@
   Enter the position the candidate is running for
   
   Enter the political party the candidate is running under
+
+# Select current election
+  You first must create an election, candidate(s) running within that election, and valid b.
+  
+  Under the "Election Actions" dropdown, choose "Select Election"
+  
+  Select whichever election you want to be active, given that there are candidate and ballot entries
