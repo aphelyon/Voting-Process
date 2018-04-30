@@ -12,9 +12,9 @@
    - API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
     
    **Responses:**
-   - pk: Primary key, election date in format YYYY-MM
+   - pk: Primary key, redundant with election_id
    - election_type: Type of election, either General, Primary, or Referendum
-   - election_id: ????? FIGURE OUT. WHATS DIFFERENCE BETWEEN THIS AND PK??
+   - election_id: election date in format YYYY-MM
     
    _Sample Response:_
     
@@ -51,7 +51,6 @@
    * last_name: last name of candidate
    * first_name: first name of candidate
    * num_votes: number of votes the candidate has received in the specific precinct
-   * success: whether the response came back successful (true/false) //_QUESTION: SHOULD WE INCLUDE A FAILED SAMPLE RESPONSE? HOW WOULD THAT LOOK LIKE?_
     
    _Sample Response:_
     
@@ -152,7 +151,6 @@
    * API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
     
    **Responses:**
-   * success: whether the response came back successful (true/false) //_QUESTION: SHOULD WE INCLUDE A FAILED SAMPLE RESPONSE? HOW WOULD THAT LOOK LIKE?_
    * Elections: specific election that a candidate ran in, by month. Format: YYYY-MM
    * position: position that the candidate ran for in a specific election
    * party: political party the candidate ran under in a specific election
