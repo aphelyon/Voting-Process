@@ -78,6 +78,7 @@ select {
 
 p {
   word-wrap: break-word !important;
+  font-size: 22px;
 }
 
 ul li ul li{
