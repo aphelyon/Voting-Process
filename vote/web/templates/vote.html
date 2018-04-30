@@ -9,7 +9,7 @@
 {% load static %}
 {% block content %}
 <div class= "well">
-    {% include "control_panel_vote.html" with positions=positions %}
+    {% include "control_panel_vote.html" with positions=positions navbar_positions=navbar_positions %}
 <form method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}

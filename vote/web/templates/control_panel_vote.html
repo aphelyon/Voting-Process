@@ -21,7 +21,7 @@
     <div class="row">
       {% block nav %}
       <div class="mynav">
-          {% for pos in positions %}
+          {% for pos in navbar_positions %}
               <a href = "{%url 'vote' forloop.counter0%}"  class="nav-link">{{pos}}</a>
           {% endfor %}
       </div>

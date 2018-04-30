@@ -430,6 +430,7 @@ def vote(request, pos_num):
     positions = []
     position_numbers = []
     ballot_entries = []
+    navbar_positions =[] #holds the positions as they should show up on the nav bar
     #filling positions and ballot_entries arrays
     for ballot_entry in elect.ballotEntries.all():
         if ballot_entry.precinct_id == request.session['precinct_id'] or ballot_entry.precinct_id == 'all':
@@ -437,6 +438,9 @@ def vote(request, pos_num):
                 ballot_entries.append(ballot_entry)
                 if ballot_entry.position not in positions:
                     positions.append(ballot_entry.position)
+                    #split the navbar positions at the .
+                    split_array = ballot_entry.position.split(".")
+                    navbar_positions.append(split_array[0])
 
     maxPosition = len(positions) - 1
 
@@ -463,11 +467,11 @@ def vote(request, pos_num):
 
         if request.method == "GET":
             return render(request, 'vote.html',
-                          {'form': form, 'first': first_position, 'last': last, 'positions': positions})
+                          {'form': form, 'first': first_position, 'last': last, 'positions': positions, 'navbar_positions': navbar_positions})
         f = web.forms.VoteForm(request.POST, ballot_entries=ballot_entries, form_position=position)
         if not f.is_valid():
             return render(request, 'vote.html',
-                          {'form': f, 'first': first_position, 'last': last, 'positions': positions})
+                          {'form': f, 'first': first_position, 'last': last, 'positions': positions, 'navbar_positions': navbar_positions})
 
     if confirm:
         if request.method == "GET":
