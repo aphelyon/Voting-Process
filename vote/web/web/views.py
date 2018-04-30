@@ -25,6 +25,7 @@ def login(request):
         return HttpResponseRedirect("/registration_check/")
     form = web.forms.LoginForm()
     if request.method in ["POST", "GET"]:
+        request.session['precinct_list'] = get_all_precincts()
         return auth_views.login(request, 'login.html')
 
 def voter_login(request):
@@ -234,12 +235,26 @@ def create_ballot_entry(request):
     if failure:
         response = {'ok': False, 'error_msg': "Ballot entry already exists", 'form': form}
         return render(request, 'add_candidate.html', response)
-    new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position, precinct_id=precinct_id)
-    e = Election.objects.get(pk=election)
-    c = Candidate.objects.get(pk=candidate)
-    e.ballotEntries.add(new_ballot_entry)
-    c.ballotEntries.add(new_ballot_entry)
-    response = {"Status": "200", 'ok': True, 'success_msg': "Ballot Entry was successfully created", 'form': form, 'Ballot_Entry': new_ballot_entry.as_json()}
+    if precinct_id == "all":
+        if "precinct_list" not in request.session:
+            response = {'ok': False, 'error_msg': "List of precincts not yet fetched", 'form': form}
+            return render(request, 'add_candidate.html', response)
+        new_ballot_entries = []
+        for p_id in request.session["precinct_list"]:
+            new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position, precinct_id=p_id)
+            e = Election.objects.get(pk=election)
+            c = Candidate.objects.get(pk=candidate)
+            e.ballotEntries.add(new_ballot_entry)
+            c.ballotEntries.add(new_ballot_entry)
+            new_ballot_entries.append(new_ballot_entry.as_json())
+        response = {"Status": "200", 'ok': True, 'success_msg': "Ballot Entries were successfully created", 'form': form, 'Ballot_Entries': new_ballot_entries}
+    else:
+        new_ballot_entry = BallotEntry.objects.create(election_id=election, candidate_id=candidate, num_votes=num_votes, party=party, position=position, precinct_id=precinct_id)
+        e = Election.objects.get(pk=election)
+        c = Candidate.objects.get(pk=candidate)
+        e.ballotEntries.add(new_ballot_entry)
+        c.ballotEntries.add(new_ballot_entry)
+        response = {"Status": "200", 'ok': True, 'success_msg': "Ballot Entry was successfully created", 'form': form, 'Ballot_Entry': new_ballot_entry.as_json()}
     return render(request, 'add_candidate.html', response)
 
 @login_required
@@ -513,7 +528,7 @@ def vote(request, pos_num):
             db_anon_voter = AnonVote.objects.get(hash=hash)
             request.session['auth'] = False
             request.session['hash'] = ''
-            return redirect('../already_voted') 
+            return redirect('../already_voted')
         except:
             pass
         anon_vote = AnonVote.objects.create(hash=hash)
@@ -601,9 +616,24 @@ def vote_record(request):
     request.session['hash'] = ""
     return render(request, "vote_record.html", {'vote_tuples': vote_tuples})
 
+# querying the voter registration database to find the set of precincts
+def get_all_precincts():
+    try:
+        req = urllib.request.Request('http://CS3240votingproject.org/voters/?key=goofy')
+    except e:
+        return error("Failed to fetch voter information.")
+    resp_json = urllib.request.urlopen(req).read().decode('utf-8')
+    resp = json.loads(resp_json)
+    voters = resp["voters"]
+    precinct_ids = []
+    for i in range(len(voters)):
+        precinct_id = voters[i]["precinct_id"]
+        if precinct_id not in precinct_ids:
+            precinct_ids.append(precinct_id)
+    return precinct_ids
+
 #Voter registration information cataloging
 def fetch_voter_info(precinct_id):
-
 	#Try to query the voter registration database.
 	try:
 		req = urllib.request.Request('http://CS3240votingproject.org/pollingsite/' + str(precinct_id) + "/?key=goofy")
