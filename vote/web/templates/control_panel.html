@@ -12,7 +12,94 @@
 
   <!-- Add additional CSS in static file -->
   {% load static %}
+  
   <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+  
+
+<!--
+  <div class="container-fullwidth">
+  <nav class=" mynav navbar navbar-expand-sm navbar-light bg-light">
+           <ul class="nav navbar-nav">
+          <a href="{% url 'checkin' %}" class="nav-link">Home</a>
+           </ul>
+            <ul class="nav navbar-nav">
+          <a href="{% url  'create_election' %}" class="nav-link">Create Election </a>
+          </ul>
+           <ul class="nav navbar-nav">
+            <a href="{% url 'create_candidate' %}" class="nav-item">Create Candidate</a>
+        </ul>
+         <ul class="nav navbar-nav">
+        <a href="{% url 'create_ballot_entry' %}" class="nav-item">Create Ballot Entry</a>
+      </ul>
+       <ul class="nav navbar-nav">
+          <a href="{% url 'delete_ballot_entry' %}" class="nav-item">Delete Ballot Entry</a>
+        </ul>
+         <ul class="nav navbar-nav">
+         <a href="{% url 'election_selection' %}" class="nav-item">Election Selection</a>
+       </ul>
+        <ul class="nav navbar-nav">
+         <a href="{% url 'add_media_partner' %}" class="nav-item">Add Media Partner</a>
+       </ul>
+        <ul class="nav navbar-nav">
+        <a href="{% url 'list_media_partner' %}" class="nav-item">List Media Partners</a>
+      </ul>
+       <ul class="nav navbar-nav">
+          <form id="logout_form" action="{% url 'logout' %}" method="post" class="nav-link">{% csrf_token %}</form>
+        </ul>
+         <ul class="nav navbar-nav">
+          <a id="logOut" href="javascript:{}" onclick="document.getElementById('logout_form').submit()">Log Out</a>
+        </ul>
+      </nav>
+</div>
+
+-->
+    
+    <nav class="nav finalnav navbar-default navbar-expand-sm" name="finalnav" >
+      <ul class="nav navbar-nav">
+        <li><a class="linktext" href="{% url 'checkin' %}">Home <span class="sr-only"></span></a></li>
+        
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Election Actions<span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{% url  'create_election' %}">Create Election</a></li>
+            <li><a class="nav-link" href="{% url 'election_selection' %}">Select Election</a></li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Candidate Actions <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{% url 'create_candidate' %}">Create Candidate</a></li>
+          </li>
+          </ul>
+        </li>
+
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ballot Actions <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{% url 'create_ballot_entry' %}">Create Ballot Entry</a></li>
+            <li><a class="nav-link" href="{% url 'delete_ballot_entry' %}">Delete Ballot Entry</a></li>
+          </ul>
+        </li>
+        
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Media Partner Actions <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a class="nav-link" href="{% url 'add_media_partner' %}">Add Media Partner</a></li>
+            <li><a class="nav-link" href="{% url 'list_media_partner' %}">List Media Partners</a></li>
+          </ul>
+        </li>
+
+
+        <li><form id="logout_form" action="{% url 'logout' %}" method="post" class="nav-link">{% csrf_token %}</form><a class="linktext" id="logOut" href="javascript:{}" onclick="document.getElementById('logout_form').submit()">Log Out</a></li>
+
+        
+
+      </ul>
+</nav>
+
+<br>
 </head>
 
 <body>
@@ -20,18 +107,7 @@
   <div class="container-fluid">
     <div class="row">
       {% block nav %}
-      <div  class=" mynav navbar navbar-expand-lg navbar-light bg-light">
-          <a href="{% url 'checkin' %}" class="nav-link">Home</a>
-          <a href="{% url  'create_election' %}" class="nav-link">Create Election</a>
-            <a href="{% url 'create_candidate' %}" class="nav-link">Create Candidate</a>
-        <a href="{% url 'create_ballot_entry' %}" class="nav-link">Create Ballot Entry</a>
-          <a href="{% url 'delete_ballot_entry' %}" class="nav-link">Delete Ballot Entry</a>
-         <a href="{% url 'election_selection' %}" class="nav-link">Election Selection</a>
-         <a href="{% url 'add_media_partner' %}" class="nav-link">Add Media Partner</a>
-        <a href="{% url 'list_media_partner' %}" class="nav-link">List Media Partners</a>
-          <form id="logout_form" action="{% url 'logout' %}" method="post" class="nav-link">{% csrf_token %}</form>
-          <a id="logOut" href="javascript:{}" onclick="document.getElementById('logout_form').submit()">Log Out</a>
-      </div>
+      
       {% endblock %}
       <div class = "panel panel-default container" >
         <div class = "panel-body">
