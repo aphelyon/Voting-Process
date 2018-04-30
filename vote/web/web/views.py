@@ -46,10 +46,10 @@ def voter_login(request):
     cur_hash = h.hexdigest()
 
     try:
-        db_anon_voter = AnonVote.objects.get(pk=cur_hash)
+        db_anon_voter = AnonVote.objects.get(hash=cur_hash)
         request.session['auth'] = False
         request.session['hash'] = ''
-        nex = reverse('voter_login')
+        nex = reverse('already_voted')
         response = HttpResponseRedirect(nex)
         return response
     except:
@@ -135,8 +135,8 @@ def voter_registered(request, fn, ln, addr):
     h.update((fn + ln + addr + cur_election).encode('utf-8'))
 
     try:
-        db_anon_voter = AnonVote.objects.get(pk=h.hexdigest())
-        return redirect('../voter_not_registered')
+        db_anon_voter = AnonVote.objects.get(hash=h.hexdigest())
+        return render(request, "voter_not_registered.html")
     except:
         pass
 
@@ -508,14 +508,15 @@ def vote(request, pos_num):
         return redirect('../vote/' + str(pos_num + 1))
 
     if 'confirm' in request.POST:
+        hash = str(request.session['hash'])
         try:
-            db_anon_voter = AnonVote.objects.get(pk=request.session['hash'])
+            db_anon_voter = AnonVote.objects.get(hash=hash)
             request.session['auth'] = False
             request.session['hash'] = ''
-            return redirect('../voter_login') # @courtney add different page
+            return redirect('../already_voted') 
         except:
             pass
-        anon_vote = AnonVote.objects.create(hash=request.session['hash'])
+        anon_vote = AnonVote.objects.create(hash=hash)
         count = 0
         vote_q = dict()
         vote_q["VOTER_HASH"]=request.session['hash']
@@ -534,6 +535,9 @@ def vote(request, pos_num):
         q.put(vote_q)
         anon_vote.save()
         return redirect('../voter_finished')
+
+def already_voted(request):
+    return render(request,'already_voted.html')
 
 def voter_exit_booth(request):
     form = web.forms.VoterExitBoothForm()
