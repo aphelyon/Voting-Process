@@ -115,4 +115,4 @@ The above sequence of steps should print "Hello World" from the thermal printer.
 ## API Key
 
 -For media company "Eric" the key is:
-- 9dcd336a8effa0e994aea532a5e949702ae96bf6caf14436c9
+- a4ad48b7cc03257e068bdeddb60bac52c785de8fd0e2f51f8c
