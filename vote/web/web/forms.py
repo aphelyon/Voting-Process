@@ -113,7 +113,7 @@ class DeleteForm(forms.Form):
         for ballot_entry in self.ballot_entries:
             pk = ballot_entry.pk
             c = Candidate.objects.get(pk=ballot_entry.candidate_id)
-            ballot = c.first_name + " " + c.last_name + " " + str(c.dob.year) + " " + ballot_entry.position
+            ballot = c.first_name + " " + c.last_name + " " + str(c.dob.year) + " " + ballot_entry.position + " " + ballot_entry.precinct_id
             tuple = (pk, ballot)
             ballot_entry_items.append(tuple)
         ballot_entry_items.sort(key=lambda ballot: ballot[1])
