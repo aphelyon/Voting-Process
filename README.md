@@ -107,12 +107,10 @@ For Linux:
 The above sequence of steps should print "Hello World" from the thermal printer.
 
 ## Referendum Support
-- Everyone needs to create a candidate First Name: In, Last Name: favor, dob doesn't matter
-- ditto for First Name: Not in, Last Name: favor, dob doesn't matter
+- First, create a candidate with First Name: "In", Last Name: "favor", Date of Birth doesn't matter
+- Second, create a candidate with First Name: "Not in", Last Name: "favor", Date of Birth doesn't matter
 
-- then create ballot entry with position equal to referendum question -- Start with  "Referendum #x." for parsing purposes 
+- Then, for each of the two "candidates" created above, create a ballot entry with position equal to the referendum question -- Start with  "Referendum #x." for parsing purposes, then make the Party equal to "Referendum", and assign the precinct as needed. 
 
-## API Key
-
--For media company "Eric" the key is:
-- a4ad48b7cc03257e068bdeddb60bac52c785de8fd0e2f51f8c
+## Quickly creating same ballot entry for all precincts
+- Set up candidates and ballot as you normally would, but instead of putting a precinct id in the slot, put the word "all", which will automatically generate ballot entry objects for all of the precincts found in the voter registration database.
