@@ -18,10 +18,12 @@ margin-right: 10px;
 }
 ul {
     list-style-type: none;
+    font-size: 20px;
+    margin-left: 35%;
+    text-align: left;
 }
 input[type="radio"] {
     transform: scale(1.30);
-    font-size: 20px;
 }
 
 .btn-space {
