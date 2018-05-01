@@ -23,6 +23,10 @@ class RegistrationCheck(forms.Form):
     lastname = forms.CharField(max_length = 100, label = "Last Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
     addr = forms.CharField(label = "Street Address", widget=forms.TextInput(attrs={'autocomplete':'off',}))
 
+class AddressLookupForm(forms.Form):
+    firstname = forms.CharField(max_length = 100, label = "First Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    lastname = forms.CharField(max_length = 100, label = "Last Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+
 class CandidateForm(forms.Form):
     firstname = forms.CharField(max_length=100, label="First Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
     lastname = forms.CharField(max_length=100, label="Last Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
