@@ -504,7 +504,8 @@ def vote(request, pos_num):
                     if submission_data[str(count)] == 'ABSTAIN':
                         voted.append(submission_data[str(count)])
                     else:
-                        voted.append(Candidate.objects.get(pk=submission_data[str(count)]).first_name + " " + Candidate.objects.get(pk=submission_data[str(count)]).last_name)
+                        cur_cand = Candidate.objects.get(pk=submission_data[str(count)])
+                        voted.append(cur_cand.first_name + " " + cur_cand.last_name)
                 count += 1
             if len(submission_data) == len(positions):
                 allowed = True
@@ -615,6 +616,8 @@ def vote_record(request):
         cand_id = ballot_entry.candidate_id
         candidate = Candidate.objects.get(pk=cand_id)
         name = candidate.first_name + " " + candidate.last_name
+        if ballot_entry.party != "Referendum":
+            name = name + ", " + ballot_entry.party + " Party"
         vote_tuples.append((position, name))
     request.session['exit_auth'] = False
     request.session['hash'] = ""
