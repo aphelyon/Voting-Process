@@ -75,7 +75,7 @@
   
 ## Election day process
 
-These following steps detail which pages are used and how during the day of the election. This includes both the voter registration check as well as the voting and exit booth process. 
+These following steps detail which pages are used and how during the day of the election. This includes both the voter registration check as well as the voting and exit booth process. Note that if super user logs out, the current election selection is reset, so superuser must repeat steps from "Select current election" above. Election will still exist, but must be re-selected
 
 ### Voter registration check
 
