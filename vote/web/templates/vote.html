@@ -14,20 +14,20 @@
 {% csrf_token %}
 {{ form.as_p }}
     {% if first and not last %}
-        <button class = "btn btn-lg btn-danger pull-right" type="submit" name="next">Next</button>
+        <button class = "btn btn-lg btn-danger pull-right btn-space" type="submit" name="next">Next</button>
     {% else %}
         {% if first and last %}
-            <button class = "btn btn-lg btn-danger pull-right" type="submit" name="submit">Submit</button>
+            <button class = "btn btn-lg btn-danger pull-right btn-space" type="submit" name="submit">Submit</button>
         {% elif not last %}
-            <button class = "btn btn-lg btn-danger pull-left"  type="submit" name="previous">Previous</button>
-            <button class = "btn btn-lg btn-danger pull-right"type="submit" name="next">Next</button>
+            <button class = "btn btn-lg btn-danger pull-left btn-space"  type="submit" name="previous">Previous</button>
+            <button class = "btn btn-lg btn-danger pull-right btn-space" type="submit" name="next">Next</button>
         {% else %}
-            <button class = "btn btn-lg btn-danger pull-left" type="submit" name="previous">Previous</button>
-            <button class = "btn btn-lg btn-danger pull-right" type="submit" name="submit">Submit</button>
+            <button class = "btn btn-lg btn-danger pull-left btn-space" type="submit" name="previous">Previous</button>
+            <button class = "btn btn-lg btn-danger pull-right btn-space" type="submit" name="submit">Submit</button>
         {% endif %}
     {% endif %}
 
-<a href="../instructions2" class="btn btn-lg btn-danger pull-left" role="button" >Back to Instructions</a>
+<a href="../instructions2" class="btn btn-lg btn-danger pull-left btn-space" role="button" >Back to Instructions</a>
 </form>
 {% endblock %}
 </div>
