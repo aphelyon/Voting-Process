@@ -13,7 +13,7 @@
 </center>
 {% block content %}
 <h2 class="center"> Voter Login</h2> </br>
-<form method="post" class="center">
+<form autocomplete="autocomplete_off_hack_xfr4!k" method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
 <button class = "btn btn-lg btn-danger" type="submit">Login</button>

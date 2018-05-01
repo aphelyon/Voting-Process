@@ -3,29 +3,29 @@ from web import views
 from web.models import *
 
 class LoginForm(forms.Form):
-    username = forms.CharField(max_length=32)
+    username = forms.CharField(max_length=32, widget=forms.TextInput(attrs={'autocomplete':'off',}))
     password = forms.CharField(max_length=256, widget=forms.PasswordInput())
 
 class VoterLoginForm(forms.Form):
-    QRHash = forms.CharField(max_length=100, label = "Scan QR Code")
-    firstname = forms.CharField(max_length = 100, label = "First Name")
-    lastname = forms.CharField(max_length = 100, label = "Last Name")
-    addr = forms.CharField(label = "Street Address")
+    QRHash = forms.CharField(max_length=100, label = "Scan QR Code", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    firstname = forms.CharField(max_length = 100, label = "First Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    lastname = forms.CharField(max_length = 100, label = "Last Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    addr = forms.CharField(label = "Street Address", widget=forms.TextInput(attrs={'autocomplete':'off',}))
 
 class VoterExitBoothForm(forms.Form):
-    QRHash = forms.CharField(max_length=100, label = "Scan QR Code")
-    firstname = forms.CharField(max_length = 100, label = "First Name")
-    lastname = forms.CharField(max_length = 100, label = "Last Name")
-    addr = forms.CharField(label = "Street Address")
+    QRHash = forms.CharField(max_length=100, label = "Scan QR Code", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    firstname = forms.CharField(max_length = 100, label = "First Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    lastname = forms.CharField(max_length = 100, label = "Last Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    addr = forms.CharField(label = "Street Address", widget=forms.TextInput(attrs={'autocomplete':'off',}))
 
 class RegistrationCheck(forms.Form):
-    firstname = forms.CharField(max_length = 100, label = "First Name")
-    lastname = forms.CharField(max_length = 100, label = "Last Name")
-    addr = forms.CharField(label = "Street Address")
+    firstname = forms.CharField(max_length = 100, label = "First Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    lastname = forms.CharField(max_length = 100, label = "Last Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    addr = forms.CharField(label = "Street Address", widget=forms.TextInput(attrs={'autocomplete':'off',}))
 
 class CandidateForm(forms.Form):
-    firstname = forms.CharField(max_length=100, label="First Name")
-    lastname = forms.CharField(max_length=100, label="Last Name")
+    firstname = forms.CharField(max_length=100, label="First Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
+    lastname = forms.CharField(max_length=100, label="Last Name", widget=forms.TextInput(attrs={'autocomplete':'off',}))
     dob = forms.DateField(label="Date of birth")
 
 class ElectionForm(forms.Form):
@@ -91,14 +91,14 @@ class VoteForm(forms.Form):
         ballot_entry_items.sort(key=lambda candidate: candidate[1])
         tuple = ('ABSTAIN', 'I abstain from voting for a ' + str(self.form_position))
         ballot_entry_items.append(tuple)
-        self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items))
+        self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items, attrs={'size':'30'}))
         self.initial[self.form_position] = ballot_entry_items[-1]
-        
-        
+
+
 class SampleVoteForm(forms.Form):
     list_of_candidates = [(0, 'George Washington'),(1,'Abraham Lincoln'),(2,'Thomas Jefferson')]
-    candidates = forms.CharField(widget=forms.RadioSelect(choices=list_of_candidates))
-    
+    candidates = forms.CharField(widget=forms.RadioSelect(choices=list_of_candidates, attrs={'size':'30'}))
+
 class MediaForm(forms.Form):
     company_name = forms.CharField(max_length=100, label="Company name")
 
@@ -116,4 +116,3 @@ class DeleteForm(forms.Form):
             ballot_entry_items.append(tuple)
         ballot_entry_items.sort(key=lambda ballot: ballot[1])
         self.fields['ballot_entry'] = forms.CharField(widget=forms.Select(choices=ballot_entry_items))
-

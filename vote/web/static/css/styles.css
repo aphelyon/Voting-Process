@@ -19,7 +19,7 @@ color:white;
 }
 
 .nav.navbar-nav > li > .dropdown-menu {
- background-color: #ffffff; 
+ background-color: #ffffff;
  }
 
  .navbar-nav > li > .dropdown-menu a{
@@ -43,7 +43,7 @@ background-color: #960018;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
-    font-size: 17px;
+    font-size: 20px;
 }
 
 /* Change the color of links on hover */
@@ -78,11 +78,11 @@ select {
 
 p {
   word-wrap: break-word !important;
-  font-size: 22px;
+  font-size: 27px;
 }
 
 ul li ul li{
-    font-size: smaller;
+    font-size: medium;
     list-style-type: none;
 }
 
