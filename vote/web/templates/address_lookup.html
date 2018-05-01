@@ -1,0 +1,33 @@
+<!-- Bootstrap imports -->
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"/>
+<link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+<!-- Bootstrap imports -->
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+<center>
+  <img class="img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
+</center>
+{% block content %}
+<h2 class="center"> Voter Address Lookup</h2> </br>
+<form method="post" class="center">
+{% csrf_token %}
+{{ form.as_p }}
+<button class = "btn btn-lg btn-danger" type="submit">Search</button>
+</form>
+
+</br>
+{% if ok %}
+<ul>
+{% for address in addresses %}
+  <li> <h3 class="center" id="green"> {{ address }} </h3>  </li> </br>
+{% endfor %}
+</ul>
+{% else %}
+  <h3 class="center" id="red"> There are no voters with this name. </h3> </br>
+{% endif %}
+
+{% endblock %}

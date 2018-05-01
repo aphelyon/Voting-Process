@@ -136,6 +136,36 @@ def registration_check(request):
         return render(request, "voter_not_registered.html")
     return voter_registered(request, fn_entered, ln_entered, addr_entered)
 
+@login_required
+def address_lookup(request):
+    form = web.forms.AddressLookupForm()
+    if request.method == "GET":
+        return render(request, 'address_lookup.html', {'form': form, 'ok': True})
+
+    f = web.forms.AddressLookupForm(request.POST)
+    if not f.is_valid():
+        return render(request, 'address_lookup.html', {'form': form, 'ok': True})
+    fn_entered = f.cleaned_data['firstname']
+    ln_entered = f.cleaned_data['lastname']
+
+    try:
+        db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered)
+        return render(request, 'address_lookup.html', {'form': form, 'ok': True, 'addresses': [db_voter.street_address]})
+    except:
+        pass
+
+    try:
+        name_matched_voter_addresses = []
+        for db_voter in Voter.objects.all():
+            if db_voter.first_name == fn_entered and db_voter.last_name == ln_entered:
+                name_matched_voters.append(db_voter.street_address)
+        if len(name_matched_voter_addresses) != 0:
+            return render(request, 'address_lookup.html', {'form': form, 'ok': True, 'addresses': name_matched_voter_addresses})
+        else:
+            return render(request, 'address_lookup.html', {'form': form, 'ok': False})
+    except:
+        return render(request, 'address_lookup.html', {'form': form, 'ok': False})
+
 def voter_registered(request, fn, ln, addr):
     h = hashlib.sha256()
     cur_election = request.session['election']
