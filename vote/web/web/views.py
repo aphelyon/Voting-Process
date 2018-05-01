@@ -678,7 +678,9 @@ def fetch_and_store_voter_info(precinct_id):
         return resp
 
 #Returns one hundred most recent votes.
-def print_queue(request):
+def print_queue(request, key):
+    if key != "ajsda_8u8ehaso_ih09_3uawjdioah839ry_hask8a2":
+        return JsonResponse({})
     i = 0
     d = dict()
     while i < 100 and not q.empty():
