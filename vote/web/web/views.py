@@ -122,7 +122,7 @@ def registration_check(request):
     fn_entered = f.cleaned_data['firstname']
     ln_entered = f.cleaned_data['lastname']
     addr_entered = f.cleaned_data['addr']
-    status = 'active'
+    status = "active"
 
     try:
         db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered, street_address=addr_entered, voter_status=status)
