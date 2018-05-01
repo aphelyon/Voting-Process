@@ -22,3 +22,7 @@ ul {
 input[type="radio"] {
     transform: scale(1.30);
 }
+
+.btn-space {
+    margin-right: 10px;
+}
