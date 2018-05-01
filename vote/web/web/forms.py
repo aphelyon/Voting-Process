@@ -86,6 +86,8 @@ class VoteForm(forms.Form):
                 pk = ballot_entry.candidate_id
                 c = Candidate.objects.get(pk=pk)
                 candid = c.first_name + " " + c.last_name
+                if ballot_entry.party != "Referendum":
+                    candid = candid + ", " + ballot_entry.party + " Party"
                 tuple = (pk, candid)
                 ballot_entry_items.append(tuple)
         ballot_entry_items.sort(key=lambda candidate: candidate[1])
