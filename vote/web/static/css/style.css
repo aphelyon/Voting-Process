@@ -21,6 +21,7 @@ ul {
 }
 input[type="radio"] {
     transform: scale(1.30);
+    font-size: 20px;
 }
 
 .btn-space {
