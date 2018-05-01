@@ -91,7 +91,7 @@ class VoteForm(forms.Form):
                 tuple = (pk, candid)
                 ballot_entry_items.append(tuple)
         ballot_entry_items.sort(key=lambda candidate: candidate[1])
-        tuple = ('ABSTAIN', 'I abstain from voting for a ' + str(self.form_position))
+        tuple = ('ABSTAIN', 'I abstain from voting for ' + str(self.form_position))
         ballot_entry_items.append(tuple)
         self.fields[self.form_position] = forms.CharField(widget=forms.RadioSelect(choices=ballot_entry_items, attrs={'size':'30'}))
         self.initial[self.form_position] = ballot_entry_items[-1]
@@ -113,7 +113,7 @@ class DeleteForm(forms.Form):
         for ballot_entry in self.ballot_entries:
             pk = ballot_entry.pk
             c = Candidate.objects.get(pk=ballot_entry.candidate_id)
-            ballot = c.first_name + " " + c.last_name + " " + str(c.dob.year) + " " + ballot_entry.position
+            ballot = c.first_name + " " + c.last_name + " " + str(c.dob.year) + " " + ballot_entry.position + " " + ballot_entry.precinct_id
             tuple = (pk, ballot)
             ballot_entry_items.append(tuple)
         ballot_entry_items.sort(key=lambda ballot: ballot[1])

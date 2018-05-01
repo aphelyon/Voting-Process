@@ -15,7 +15,7 @@ class Voter(models.Model):
     precinct = models.CharField(max_length=50)
     precinct_id = models.CharField(max_length=20)
     def as_json(self):
-        return dict(first_name = self.first_name, last_name=self.last_name, voter_number=self.voter_number)
+        return dict(first_name = self.first_name, last_name=self.last_name, street_address=self.street_address, voter_status=self.voter_status)
 
 class BallotEntry(models.Model):
     party = models.CharField(max_length=100)

@@ -122,7 +122,7 @@ def registration_check(request):
     fn_entered = f.cleaned_data['firstname']
     ln_entered = f.cleaned_data['lastname']
     addr_entered = f.cleaned_data['addr']
-    status = 'active'
+    status = "active"
 
     try:
         db_voter = Voter.objects.get(first_name=fn_entered, last_name=ln_entered, street_address=addr_entered, voter_status=status)
@@ -544,7 +544,7 @@ def vote(request, pos_num):
             candidate_pk = submission_data[str(count)]
             if not candidate_pk == 'ABSTAIN':
                 for ballot_entry in elect.ballotEntries.all():
-                    if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position:
+                    if str(ballot_entry.candidate_id) == str(candidate_pk) and ballot_entry.position == position and ballot_entry.precinct_id == request.session["precinct_id"]:
                         ballot_entry.num_votes += 1
                         ballot_entry.save()
                         anon_vote.ballotEntries.add(ballot_entry)
