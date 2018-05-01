@@ -6,7 +6,19 @@
   
   These steps are all done by the superuser before an election takes place.
   
-  You first must be logged in as superuser (see readme.md for how to create one)
+  You first must be logged in as superuser 
+  
+  To create a superuser:
+    
+      go to your terminal
+
+      docker-compose up (if it isn't currently running)
+
+      open a new terminal window
+
+      docker exec -it vote_web_1 bash
+
+      python web/manage.py createsuperuser
 
 ### Create an election
   
