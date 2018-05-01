@@ -520,7 +520,10 @@ def vote(request, pos_num):
         if not confirm:
             submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
             request.session['submission'] = submission_data
-        return redirect('../vote/' + str(pos_num - 1))
+        if pos_num == 0:
+            return redirect('../instructions2')
+        else:
+            return redirect('../vote/' + str(pos_num - 1))
 
     if 'submit' in request.POST:
         submission_data[str(pos_num)] = f.cleaned_data[positions[pos_num]]
