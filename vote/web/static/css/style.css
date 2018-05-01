@@ -1,8 +1,8 @@
 /*body {background: rgba(0, 153, 204, 0.75); font-family: arial; font-size: 18px; color:black;}*/
 /*button {color: white; font-family: arial; font-size: 18px; font-weight: bold; padding: 8px 15px; background-color: rgb(204, 51, 51); border: 2px solid white}*/
-div.div1 {color: white; font-family: arial; font-size: 22px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; left:20;}
-div.div2 {color: white; font-family: arial; font-size: 22px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; top:20; right:20;}
-.logout{position:absolute; top:20; right:20;}
+div.div1 {color: white; font-family: arial; font-size: 27px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; bottom:20; left:20;}
+div.div2 {color: white; font-family: arial; font-size: 27px; font-weight: bold; padding: 8px 10px; background-color: rgb(204, 51, 51); border: 2px solid white; position:absolute; top:20; right:20;}
+.logout{position:absolute; top:20; right:20}
 .center{text-align: center; margin:0 auto;}
 body { background-color : #f5f5f5;}
 .spacer {
@@ -11,7 +11,7 @@ margin-top: 10px;
 margin-right: 10px;
 }
 p {
-font-size: 22px;
+font-size: 27px;
 }
 ul {
     list-style-type: none;
