@@ -110,6 +110,12 @@ def voter_finished(request):
     request.session["hash"] = ""
     return render(request, "voter_finished.html")
 
+@voter_auth
+def voter_cancelled(request):
+    request.session["auth"] = False
+    request.session["hash"] = ""
+    return render(request, "voter_cancelled.html")
+
 @login_required
 def registration_check(request):
     form = web.forms.RegistrationCheck()

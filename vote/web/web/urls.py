@@ -45,6 +45,7 @@ urlpatterns = [
     path('instructions2', views.instructions2,name='instructions2'),
     path('primary_party_select', views.primary_party_select, name='primary_party_select'),
     path('voter_finished', views.voter_finished,name='voter_finished'),
+    path('voter_cancelled', views.voter_cancelled,name='voter_cancelled'),
     path('vote/<int:pos_num>', views.vote, name='vote'),
     path('vote', views.vote, name='vote'),
     path('voter_exit_booth', views.voter_exit_booth, name='voter_exit_booth'),
