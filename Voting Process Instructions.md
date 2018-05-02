@@ -76,7 +76,7 @@ The superuser can create poll workers. To do this, go to /admin and sign in as t
 
 ## Election day process
 
-These following steps detail which pages are used and how during the day of the election. This includes both the voter registration check as well as the voting and exit booth process. Note that if super user logs out, the current election selection is reset, so superuser must repeat steps from "Select current election" above. Election will still exist, but must be re-selected
+These following steps detail which pages are used and how during the day of the election. This includes both the voter registration check as well as the voting and exit booth process. Note that the super user must have already selected a current election in order to vote on election day. Once a super user has already selected an election, a reguler poll worker can log in to facilitate the voting process.
 
 ### Voter registration check
 
