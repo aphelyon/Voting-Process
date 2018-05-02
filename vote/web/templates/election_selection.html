@@ -6,12 +6,13 @@
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Bootstrap imports -->
 {% load static %}
+{% block content %}
 {% if user.is_superuser %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
 
 <!--<img class = "img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo" class="center"/>
 -->
-{% block content %}
+
 {% if selected %}
     <h1 class="center" id="blue"> {{ current_election }} </h1> </br>
 {% elif not selected and not ok %}
@@ -27,8 +28,8 @@
     <ul><p>Don't see the election you want to select? <a href="{% url 'create_election' %}">Add it here.</a></p></ul>
 <button class = "btn btn-lg btn-danger" type="submit">Select</button>
 </form>
-{% endblock %}
 {% else %}
 <h2 class="center"> Access Denied </h2>
 <p>You do not have permission to view this page.</p>
 {% endif %}
+{% endblock %}

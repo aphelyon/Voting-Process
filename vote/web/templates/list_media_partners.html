@@ -5,8 +5,8 @@
 <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
 <!-- Bootstrap imports -->
-{% if user.is_superuser %}
 {% block content %}
+{% if user.is_superuser %}
   <title>List of Media Partners</title>
 
 
@@ -42,8 +42,8 @@
     </div>
 
 
-{% endblock %}
 {% else %}
 <h2 class="center"> Access Denied </h2>
 <p>You do not have permission to view this page.</p>
 {% endif %}
+{% endblock %}

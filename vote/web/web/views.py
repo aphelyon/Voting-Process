@@ -310,8 +310,11 @@ def create_ballot_entry(request):
 
 @login_required
 def delete_ballot_entry(request):
+    election = None
     if 'election' in request.session:
         election = request.session['election']
+    else:
+        return render(request, "delete_ballot_entry.html")
     elect = Election.objects.get(election_id=election)
     ballot_entries = []
     for ballot_entry in elect.ballotEntries.all():
