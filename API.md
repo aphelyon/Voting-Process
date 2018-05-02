@@ -151,7 +151,7 @@
    * API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
-   * Elections: specific election that a candidate ran in, by month. Format: YYYY-MM
+   * Elections: specific election that a candidate ran in, by month. Contains one or more objects for different precincts. Format: YYYY-MM
    * position: position that the candidate ran for in a specific election
    * party: political party the candidate ran under in a specific election
    * num_votes the number of votes the candidate received when running for that specific election
@@ -165,14 +165,22 @@
           {  
             "position":"President",
             "party":"Democrat",
-            "num_votes":13832
+            "num_votes":13832,
+            "precinct_id":"0202"
           }
         ],
         "2019-11":[  
           {  
             "position":"President",
             "party":"Democrat",
-            "num_votes":22932
+            "num_votes":22933,
+            "precinct_id":"0405"
+          },
+          {  
+            "position":"President",
+            "party":"Democrat",
+            "num_votes":20541,
+            "precinct_id":"0202"
           }
         ]
       }
