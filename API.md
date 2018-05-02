@@ -9,7 +9,7 @@
     http://167.99.237.230:8000/elections/<API-KEY>
     
    **Parameters:**
-   - API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   - API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
    - pk: Primary key, redundant with election_id
