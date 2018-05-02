@@ -1,9 +1,9 @@
 # How to use our External API
-# Create a media ID
+## Create a media ID
   First, the superuser must enter the add a media partner page at http://167.99.237.230:8000/add_media_partner, and enter in the company that the api key will be given to.
   This page generates the 50 character hexadecimal API key for each of the respective companies, so that media outlets with their unique secret identifier are the only users with access to all the election and candidate information.
   
-# How to access the list of all the elections
+## How to access the list of all the elections
   The media outlet can access the list of all the past and current elections by navigating to 
   
     http://167.99.237.230:8000/elections/<API-KEY>
@@ -34,7 +34,7 @@
     }
     
     
-# How to access information relevant to a particular election
+## How to access information relevant to a particular election
   The media outlet can access information about a particular election by navigating to
     
     http://167.99.237.230:8000/elections/<Election Year>-<Election Month>/<API-KEY>
@@ -93,7 +93,7 @@
     }
     
    
-# How to access the list of all the possible candidates
+## How to access the list of all the possible candidates
   The media outlet can access the list of all the past and current candidates by navigating to
     
     http://167.99.237.230:8000/candidates/<API-KEY>
@@ -139,7 +139,7 @@
     }
     
 
-# How to access information about a particular candidate
+## How to access information about a particular candidate
   The media outlet can access information about a particular candidate by simply navigating to
   
     http://167.99.237.230:8000/candidates/<Candidate First Name>-<Candidate Last Name>-<Candidate Year of Birth>/<API-KEY> 
