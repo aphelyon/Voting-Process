@@ -12,13 +12,14 @@
   <img class="img-responsive" src="{% static 'images/VADeptElectLogo.png' %}" alt="Logo"/>
 </center>
 {% block content %}
+
 <h2 class="center"> Voter Login</h2> </br>
 <form autocomplete="autocomplete_off_hack_xfr4!k" method="post" class="center">
 {% csrf_token %}
 {{ form.as_p }}
 <button class = "btn btn-lg btn-danger" type="submit">Login</button>
 </form>
-
+<h2 class="center" id="red"> {{ failure_msg }} </h2> </br>
 {% endblock %}
 
 <script>

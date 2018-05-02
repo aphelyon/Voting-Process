@@ -30,3 +30,7 @@ input[type="radio"] {
     margin-right: 10px;
     margin-left: 10px;
 }
+
+#red {
+color: red;
+}
