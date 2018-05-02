@@ -79,7 +79,7 @@ def voter_login(request):
         return response
     else:
         request.session['auth'] = False
-        return render(request, 'voter_login.html', {'form': form, "failure_msg": "Failed to authenticate. Be sure your information was input exactly as it appears on your identification"})
+        return render(request, 'voter_login.html', {'form': form, "failure_msg": "Failed to authenticate. Be sure your information was input exactly as it appears on your identification."})
 
 # This is a decorator definition to make sure that voters can only access
 # voting-process-associated pages once they've been successfully authorized
