@@ -42,7 +42,7 @@
    **Parameters:**
    * Election Year: year of the election. Format: YYYY
    * Election Month: month of the election. Format: MM
-   * API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   * API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
    * positions: array of all positions for which candidates are running in any given election
@@ -99,7 +99,7 @@
     http://167.99.237.230:8000/candidates/<API-KEY>
     
    **Parameters:**
-   * API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   * API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
    * pk: primary key of candidate, dynamically generated as iterative int at candidate creation
@@ -148,7 +148,7 @@
    * Candidate First Name: first name of candidate being queried
    * Candidate Last Name: last name of candidate being queried
    * Candidate Year of Birth: year of birth for candidate being queried. Format: YYYY
-   * API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   * API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
    * Elections: specific election that a candidate ran in, by month. Format: YYYY-MM
