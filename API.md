@@ -1,15 +1,15 @@
-## How to use our internal API
-# Create a media ID
+# How to use our External API
+## Create a media ID
   First, the superuser must enter the add a media partner page at http://167.99.237.230:8000/add_media_partner, and enter in the company that the api key will be given to.
   This page generates the 50 character hexadecimal API key for each of the respective companies, so that media outlets with their unique secret identifier are the only users with access to all the election and candidate information.
   
-# How to access the list of all the elections
+## How to access the list of all the elections
   The media outlet can access the list of all the past and current elections by navigating to 
   
     http://167.99.237.230:8000/elections/<API-KEY>
     
    **Parameters:**
-   - API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   - API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
    - pk: Primary key, redundant with election_id
@@ -34,7 +34,7 @@
     }
     
     
-# How to access information relevant to a particular election
+## How to access information relevant to a particular election
   The media outlet can access information about a particular election by navigating to
     
     http://167.99.237.230:8000/elections/<Election Year>-<Election Month>/<API-KEY>
@@ -42,7 +42,7 @@
    **Parameters:**
    * Election Year: year of the election. Format: YYYY
    * Election Month: month of the election. Format: MM
-   * API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   * API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
    * positions: array of all positions for which candidates are running in any given election
@@ -93,13 +93,13 @@
     }
     
    
-# How to access the list of all the possible candidates
+## How to access the list of all the possible candidates
   The media outlet can access the list of all the past and current candidates by navigating to
     
     http://167.99.237.230:8000/candidates/<API-KEY>
     
    **Parameters:**
-   * API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   * API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
    * pk: primary key of candidate, dynamically generated as iterative int at candidate creation
@@ -139,7 +139,7 @@
     }
     
 
-# How to access information about a particular candidate
+## How to access information about a particular candidate
   The media outlet can access information about a particular candidate by simply navigating to
   
     http://167.99.237.230:8000/candidates/<Candidate First Name>-<Candidate Last Name>-<Candidate Year of Birth>/<API-KEY> 
@@ -148,10 +148,10 @@
    * Candidate First Name: first name of candidate being queried
    * Candidate Last Name: last name of candidate being queried
    * Candidate Year of Birth: year of birth for candidate being queried. Format: YYYY
-   * API-KEY: the 50 character hexadecmial unique media ID generated at /add_media_partner
+   * API-KEY: the 50 character hexadecimal unique media ID generated at /add_media_partner
     
    **Responses:**
-   * Elections: specific election that a candidate ran in, by month. Format: YYYY-MM
+   * Elections: specific election that a candidate ran in, by month. Contains one or more objects for different precincts. Format: YYYY-MM
    * position: position that the candidate ran for in a specific election
    * party: political party the candidate ran under in a specific election
    * num_votes the number of votes the candidate received when running for that specific election
@@ -165,14 +165,22 @@
           {  
             "position":"President",
             "party":"Democrat",
-            "num_votes":13832
+            "num_votes":13832,
+            "precinct_id":"0202"
           }
         ],
         "2019-11":[  
           {  
             "position":"President",
             "party":"Democrat",
-            "num_votes":22932
+            "num_votes":22933,
+            "precinct_id":"0405"
+          },
+          {  
+            "position":"President",
+            "party":"Democrat",
+            "num_votes":20541,
+            "precinct_id":"0202"
           }
         ]
       }
