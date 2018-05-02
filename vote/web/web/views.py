@@ -445,7 +445,7 @@ def candidate_details(request, first_name, last_name, year, api_key):
             ballotEntries = []
             for ballot_entry in candidate.ballotEntries.all():
                 if election == ballot_entry.election_id:
-                    ballot_entry_display = dict(party=ballot_entry.party, position=ballot_entry.position, num_votes=ballot_entry.num_votes)
+                    ballot_entry_display = dict(party=ballot_entry.party, position=ballot_entry.position, num_votes=ballot_entry.num_votes, precinct_id=ballot_entry.precinct_id)
                     ballotEntries.append(ballot_entry_display)
             election_dictionary[election] = ballotEntries
         return JsonResponse({'success': success, 'Elections': election_dictionary})
