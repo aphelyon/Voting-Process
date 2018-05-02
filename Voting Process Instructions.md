@@ -71,8 +71,9 @@
   
   The current election must be manually selected on all machines by the super user prior to beginning the voting process.
   
-  
-  
+### Create a poll worker  
+The superuser can create poll workers. To do this, go to /admin and sign in as the super user and create the poll workers. The poll workers are allowed to access the registration page.
+
 ## Election day process
 
 These following steps detail which pages are used and how during the day of the election. This includes both the voter registration check as well as the voting and exit booth process. Note that if super user logs out, the current election selection is reset, so superuser must repeat steps from "Select current election" above. Election will still exist, but must be re-selected
