@@ -1,4 +1,4 @@
-## How to use our External API
+# How to use our External API
 # Create a media ID
   First, the superuser must enter the add a media partner page at http://167.99.237.230:8000/add_media_partner, and enter in the company that the api key will be given to.
   This page generates the 50 character hexadecimal API key for each of the respective companies, so that media outlets with their unique secret identifier are the only users with access to all the election and candidate information.
