@@ -9,6 +9,7 @@ import hashlib
 from web import models
 from web.models import *
 import web.forms
+from copy import deepcopy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import views as auth_views
 from django.forms.models import model_to_dict
@@ -22,11 +23,25 @@ q = Queue()
 
 def login(request):
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/registration_check/")
+        return HttpResponseRedirect("/registration_check")
     form = web.forms.LoginForm()
     if request.method in ["POST", "GET"]:
         request.session['precinct_list'] = get_all_precincts()
         return auth_views.login(request, 'login.html')
+
+@login_required
+def logout(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect("../login")
+    keys_to_store = ["election", "election_type", "precinct_id"]
+    temp_obj = {}
+    for key in keys_to_store:
+        if key in request.session:
+            temp_obj[key] = deepcopy(request.session[key])
+    auth_views.logout(request)
+    for key in temp_obj:
+        request.session[key] = deepcopy(temp_obj[key])
+    return redirect("../login")
 
 def voter_login(request):
     form = web.forms.VoterLoginForm()

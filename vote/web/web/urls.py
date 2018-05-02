@@ -27,7 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('registration_check/', views.registration_check, name='checkin'),
     path('login/', views.login, name='login'),
-    path('logout/', auth_views.logout, {'next_page': 'login'}, name='logout'),
+    path('logout/', views.logout, name='logout'),
     path('voter_login/', views.voter_login, name='voter_login'),
     path('create_candidate', views.create_candidate, name='create_candidate'),
     path('create_election', views.create_election, name='create_election'),
